@@ -1,0 +1,1 @@
+@java -Dgwt.args="-web -out www-test" -cp "%~dp0\src;%~dp0\test;%~dp0\bin;c:\java\junit3.8.1\junit.jar;C:/java/gwt-windows-1.4.61/gwt-user.jar;C:/java/gwt-windows-1.4.61/gwt-dev-windows.jar" junit.textui.TestRunner com.digitalenergyinc.festival.client.festivalTest %*

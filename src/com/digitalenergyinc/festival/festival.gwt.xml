@@ -1,0 +1,30 @@
+<module>
+
+	<!-- Inherit the core Web Toolkit stuff.                  -->
+	<inherits name='com.google.gwt.user.User'/>
+
+    <!-- For common festival routines -->
+	<inherits name='com.digitalenergyinc.fest.festCommon'/>
+	<inherits name='com.digitalenergyinc.fest.festServer'/>
+	
+	<!-- For URL Token analyzer -->
+	<inherits name='org.gwtwidgets.WidgetLibrary'/>
+	
+	<!-- For login panel -->
+	<inherits name="org.mcarthur.sandy.gwt.login.Login"/>
+	
+	<!-- For progress bar -->
+	<inherits name='com.google.gwt.widgetideas.WidgetIdeas' /> 
+	
+	<!-- For date picker -->
+	<inherits name='com.google.gwt.widgetideas.datepicker.DatePicker'/>
+	
+	<!-- Specify the app entry point class.                   -->
+	<entry-point class='com.digitalenergyinc.festival.client.festival'/>
+  
+    <!-- Specify the style sheet.                             -->
+	<stylesheet src='festival.css'/>
+
+	<!-- Specify the RPC Common classes.                      -->
+	<servlet path='/RPCCommonService' class='com.digitalenergyinc.fest.server.RPCCommonServiceImpl'/>
+</module>

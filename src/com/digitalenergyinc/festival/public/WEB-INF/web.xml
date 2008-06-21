@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE web-app PUBLIC "-//Sun Microsystems, Inc.//DTD Web Application 2.3//EN" 
+	"http://java.sun.com/dtd/web-app_2_3.dtd">
+<web-app>
+  <description>Film Festival Scheduling</description>
+  
+  <!-- Logging servlet -->
+  <servlet>
+    <servlet-name>log4j-init</servlet-name>
+    <servlet-class>com.digitalenergyinc.festival.server.Log4jInit</servlet-class>
+
+    <init-param>
+      <param-name>log4j-init-file</param-name>
+      <param-value>WEB-INF/log4j.properties</param-value>
+    </init-param>
+
+    <load-on-startup>1</load-on-startup>
+  </servlet>
+      
+  <!-- Database Initialization Servlet (must load after ActionServlet) -->
+  <servlet>
+    <servlet-name>init</servlet-name>
+    <servlet-class>com.digitalenergyinc.festival.server.InitServlet</servlet-class>
+    <load-on-startup>3</load-on-startup>
+  </servlet>  
+
+  <!--my RPC servlets-->
+  <servlet>
+    <servlet-name>RPCCommonService</servlet-name>
+    <servlet-class>com.digitalenergyinc.fest.server.RPCCommonServiceImpl</servlet-class>
+  </servlet>
+  
+  <servlet-mapping>
+    <servlet-name>RPCCommonService</servlet-name>
+    <url-pattern>/RPCCommonService</url-pattern>
+  </servlet-mapping>
+	
+	  <!-- The Welcome File List -->
+  <welcome-file-list>
+    <welcome-file>index.html</welcome-file>
+  </welcome-file-list>
+
+  <!--my filters that cache .CACHE files to improve performance -->
+  <filter>
+  	<filter-name>CacheFilter</filter-name>
+  	<filter-class>
+  		com.digitalenergyinc.festival.server.CacheFilter
+  	</filter-class>
+  </filter>
+  
+  <filter-mapping>
+  	<filter-name>CacheFilter </filter-name>
+  	<url-pattern>*.html</url-pattern>
+  </filter-mapping>
+  
+  <filter-mapping>
+  	<filter-name>CacheFilter </filter-name>
+  	<url-pattern>*.png</url-pattern>
+  </filter-mapping>
+
+  
+  <!-- mySQL film database -->
+  <resource-ref>
+	  <description>Resource reference to a factory for java.sql.Connection
+    instances that may be used for talking to a particular
+    database that is configured in the context.xml file.</description>
+      <res-ref-name>jdbc/movie</res-ref-name>
+      <res-type>javax.sql.DataSource</res-type>
+      <res-auth>Container</res-auth>
+	  <res-sharing-scope>Shareable</res-sharing-scope>
+  </resource-ref>
+</web-app>
