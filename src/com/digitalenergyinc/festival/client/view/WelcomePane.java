@@ -7,7 +7,7 @@ import com.digitalenergyinc.fest.client.ServerListener;
 import com.digitalenergyinc.festival.client.Sink;
 import com.digitalenergyinc.fest.client.control.MovieHandler;
 import com.digitalenergyinc.fest.client.control.ScheduleHandler;
-import com.digitalenergyinc.fest.client.control.Summary;
+import com.digitalenergyinc.fest.client.control.SummaryHandler;
 import com.digitalenergyinc.fest.client.control.TheaterHandler;
 import com.digitalenergyinc.fest.client.control.TicketHandler;
 import com.digitalenergyinc.fest.client.control.User;
@@ -165,11 +165,11 @@ public class WelcomePane extends Sink
 		tickets1.setHTML("You have " +myTix.getNumberOfTix()+" tickets.");
 		tickets1.setVisible(true);
 		
-		summary1.setHTML("You have ranked " + Summary.getMoviesRanked()+" films");
+		summary1.setHTML("You have ranked " + SummaryHandler.getMoviesRanked()+" films");
 		summary1.setVisible(true);
-		summary2.setHTML("You have " + Summary.getMoviesUnranked()+" films unranked.");
+		summary2.setHTML("You have " + SummaryHandler.getMoviesUnranked()+" films unranked.");
 		summary2.setVisible(true);
-		int totalTix = Summary.getPremiereTixSched() + Summary.getRegularTixSched();
+		int totalTix = SummaryHandler.getPremiereTixSched() + SummaryHandler.getRegularTixSched();
 		summary3.setHTML("You have " +totalTix+" films on your schedule.");
 		summary3.setVisible(true);
 

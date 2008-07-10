@@ -13,7 +13,7 @@ import com.digitalenergyinc.fest.client.control.ApptHandler;
 import com.digitalenergyinc.fest.client.control.ICalHandler;
 import com.digitalenergyinc.fest.client.control.MovieHandler;
 import com.digitalenergyinc.fest.client.control.ScheduleHandler;
-import com.digitalenergyinc.fest.client.control.Summary;
+import com.digitalenergyinc.fest.client.control.SummaryHandler;
 import com.digitalenergyinc.fest.client.control.User;
 import com.digitalenergyinc.fest.client.model.ApptRPC;
 import com.digitalenergyinc.fest.client.model.ShowingRPC;
@@ -200,10 +200,10 @@ public class MySchedPane extends Sink implements ClickListener, ChangeListener,
 		Grid schedTable = new Grid(2,2);
 		HTML sched1 = new HTML("Score:");
 		sched1.setTitle("The strength of your schedule (on scale of 0 to 100).");
-		schedScore.setText(String.valueOf(Summary.getSchedScore()));
+		schedScore.setText(String.valueOf(SummaryHandler.getSchedScore()));
 		HTML sched2 = new HTML("Relative Score:");
 		sched2.setTitle("The sum of rankings of films on your schedule.");
-		schedNScore.setText(String.valueOf(Summary.getSchedNScore()));
+		schedNScore.setText(String.valueOf(SummaryHandler.getSchedNScore()));
 		
 		schedTable.setStyleName("sched-Film-Font");
 		schedTable.setWidget(0, 0, sched2);
@@ -219,9 +219,9 @@ public class MySchedPane extends Sink implements ClickListener, ChangeListener,
 		
 		
 		reschedMsg.setStyleName("film-Errors");
-		if (Summary.isRescheduleNeeded())
+		if (SummaryHandler.isRescheduleNeeded())
 		{
-			reschedMsg.setText(Summary.getReschedReasonMsg());
+			reschedMsg.setText(SummaryHandler.getReschedReasonMsg());
 			reschedButton.setEnabled(true);
 		}
 		else
@@ -388,11 +388,11 @@ public class MySchedPane extends Sink implements ClickListener, ChangeListener,
         }   
         
         // update scores
-        schedScore.setText(String.valueOf(Summary.getSchedScore()));
-        schedNScore.setText(String.valueOf(Summary.getSchedNScore()));
-        if (Summary.isRescheduleNeeded())
+        schedScore.setText(String.valueOf(SummaryHandler.getSchedScore()));
+        schedNScore.setText(String.valueOf(SummaryHandler.getSchedNScore()));
+        if (SummaryHandler.isRescheduleNeeded())
         {
-            reschedMsg.setText(Summary.getReschedReasonMsg());
+            reschedMsg.setText(SummaryHandler.getReschedReasonMsg());
             reschedButton.setEnabled(true);
         }
         else

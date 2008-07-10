@@ -4,12 +4,12 @@ import com.digitalenergyinc.fest.client.Constants;
 import com.digitalenergyinc.fest.client.DataChangeListener;
 import com.digitalenergyinc.fest.client.LogoutListener;
 import com.digitalenergyinc.fest.client.ServerListener;
-import com.digitalenergyinc.festival.client.Sink;
-import com.digitalenergyinc.fest.client.control.SchedPolicy;
+import com.digitalenergyinc.fest.client.control.SchedPolicyHandler;
 import com.digitalenergyinc.fest.client.control.ScheduleHandler;
 import com.digitalenergyinc.fest.client.control.User;
 import com.digitalenergyinc.fest.client.model.ShowingRPC;
 import com.digitalenergyinc.fest.client.model.UtilTimeRPC;
+import com.digitalenergyinc.festival.client.Sink;
 import com.google.gwt.user.client.DeferredCommand;
 import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.IncrementalCommand;
@@ -208,7 +208,7 @@ public class MyOptPane extends Sink implements ClickListener, ChangeListener,
 
 		// set up listener
 		User.addLogoutListener(this);
-		SchedPolicy.addServerListener(new myServerlistener());
+		SchedPolicyHandler.addServerListener(new myServerlistener());
 		
 		// set up each day in schedule for a user (if not created already)
 		ScheduleHandler schedHandler = ScheduleHandler.instance();
@@ -233,18 +233,18 @@ public class MyOptPane extends Sink implements ClickListener, ChangeListener,
 	private void loadOptions()
 	{
 		showWait("Loading...");
-		pickStart.setSelectedDayIndex(SchedPolicy.getFirstMovieIndex());
-		pickEnd.setSelectedDayIndex(SchedPolicy.getLastMovieIndex());
+		pickStart.setSelectedDayIndex(SchedPolicyHandler.getFirstMovieIndex());
+		pickEnd.setSelectedDayIndex(SchedPolicyHandler.getLastMovieIndex());
 		UtilTimeRPC utilTime = new UtilTimeRPC();
 		
-		int timeIndex = utilTime.convertTimeToIndex8(SchedPolicy.getFirstMovieTime());
+		int timeIndex = utilTime.convertTimeToIndex8(SchedPolicyHandler.getFirstMovieTime());
 		lbStartTime.setSelectedIndex(timeIndex);
 
-		timeIndex = utilTime.convertTimeToIndex8(SchedPolicy.getLastMovieTime());
+		timeIndex = utilTime.convertTimeToIndex8(SchedPolicyHandler.getLastMovieTime());
 		lbEndTime.setSelectedIndex(timeIndex);
 
 		
-		if (SchedPolicy.isRedEyeMovieOK())
+		if (SchedPolicyHandler.isRedEyeMovieOK())
 		{
 			rbRedEyeYes.setChecked(true);
 			rbRedEyeNo.setChecked(false);
@@ -255,17 +255,17 @@ public class MyOptPane extends Sink implements ClickListener, ChangeListener,
 			rbRedEyeNo.setChecked(true);
 		}
 
-        int tempMin = (SchedPolicy.getMealMinutes() / 30) - 1;
+        int tempMin = (SchedPolicyHandler.getMealMinutes() / 30) - 1;
         //System.out.println("tempMin "+tempMin+" mealMin "+SchedPolicy.getMealMinutes());
         lbMealMin.setSelectedIndex(tempMin);
         
-        timeIndex = utilTime.convertTimeToIndex8(SchedPolicy.getStartMealTime());
+        timeIndex = utilTime.convertTimeToIndex8(SchedPolicyHandler.getStartMealTime());
         lbMealStart.setSelectedIndex(timeIndex);
         
-        timeIndex = utilTime.convertTimeToIndex8(SchedPolicy.getEndMealTime());
+        timeIndex = utilTime.convertTimeToIndex8(SchedPolicyHandler.getEndMealTime());
         lbMealEnd.setSelectedIndex(timeIndex);
         
-		if (SchedPolicy.isHaveMealBreak())
+		if (SchedPolicyHandler.isHaveMealBreak())
 		{
 			rbMealYes.setChecked(true);
 			rbMealNo.setChecked(false);
@@ -282,18 +282,18 @@ public class MyOptPane extends Sink implements ClickListener, ChangeListener,
 			lbMealMin.setEnabled(false);
 		}
 	    
-	    lbTix.setSelectedIndex(SchedPolicy.getTicketsRequested() - 1);
+	    lbTix.setSelectedIndex(SchedPolicyHandler.getTicketsRequested() - 1);
 	    
-	    tempMin = (SchedPolicy.getBetweenMinutes() / 5);
+	    tempMin = (SchedPolicyHandler.getBetweenMinutes() / 5);
 		//System.out.println("between "+tempMin+" mealMin "+SchedPolicy.getBetweenMinutes());
 		lbBetween.setSelectedIndex(tempMin);
 
-		if (SchedPolicy.getMoviesPerDay() == 0)
+		if (SchedPolicyHandler.getMoviesPerDay() == 0)
 			lbFilms.setSelectedIndex(5);
 		else
-			lbFilms.setSelectedIndex(SchedPolicy.getMoviesPerDay()); 
+			lbFilms.setSelectedIndex(SchedPolicyHandler.getMoviesPerDay()); 
 		
-		setTheaterOption(SchedPolicy.getTheaterMap());
+		setTheaterOption(SchedPolicyHandler.getTheaterMap());
 		
 		hideWait();
 	}
@@ -826,7 +826,7 @@ public class MyOptPane extends Sink implements ClickListener, ChangeListener,
 
 			// update options in database	
 			readNew = false;
-			SchedPolicy.updatePolicy();
+			SchedPolicyHandler.updatePolicy();
 			// **Look for answer in serverListener
 		}
 		else if (sender == cancelButton)
@@ -836,24 +836,24 @@ public class MyOptPane extends Sink implements ClickListener, ChangeListener,
 
 			// read options from database	
 			readNew = true;
-			SchedPolicy.loadPolicy();
+			SchedPolicyHandler.loadPolicy();
 			// **Look for answer in serverListener
 		}
 		else if (sender == rbRedEyeYes)
 		{
-			SchedPolicy.setRedEyeMovieOK(true);
+		    SchedPolicyHandler.setRedEyeMovieOK(true);
 			setOptChanged();
 			//System.out.println("red eye Yes");
 		}	
 		else if (sender == rbRedEyeNo)
 		{
-			SchedPolicy.setRedEyeMovieOK(false);
+		    SchedPolicyHandler.setRedEyeMovieOK(false);
 			setOptChanged();
 			//System.out.println("red eye No");
 		}	
 		else if (sender == rbMealYes)
 		{
-			SchedPolicy.setHaveMealBreak(true);
+		    SchedPolicyHandler.setHaveMealBreak(true);
 			setOptChanged();
 			lbMealStart.setEnabled(true);
 			lbMealEnd.setEnabled(true);
@@ -862,7 +862,7 @@ public class MyOptPane extends Sink implements ClickListener, ChangeListener,
 		}	
 		else if (sender == rbMealNo)
 		{
-			SchedPolicy.setHaveMealBreak(false);
+		    SchedPolicyHandler.setHaveMealBreak(false);
 			setOptChanged();
 			lbMealStart.setEnabled(false);
 			lbMealEnd.setEnabled(false);
@@ -908,7 +908,7 @@ public class MyOptPane extends Sink implements ClickListener, ChangeListener,
 				strTime = tempTime.substring(0, 5) + ":00";
 			}
 			//System.out.println("Time:"+strTime);
-			SchedPolicy.setFirstMovieTime(strTime);
+			SchedPolicyHandler.setFirstMovieTime(strTime);
 			setOptChanged();
 			
 			// check for error condition
@@ -932,7 +932,7 @@ public class MyOptPane extends Sink implements ClickListener, ChangeListener,
 				strTime = tempTime.substring(0, 5) + ":00";
 			}
 			//System.out.println("Time:"+strTime);
-			SchedPolicy.setLastMovieTime(strTime);
+			SchedPolicyHandler.setLastMovieTime(strTime);
 			setOptChanged();
 			
 			// check for error condition
@@ -948,21 +948,21 @@ public class MyOptPane extends Sink implements ClickListener, ChangeListener,
 			if (tempFilms == 6)
 				tempFilms = 0;
 			//System.out.println("Films:"+tempFilms);
-			SchedPolicy.setMoviesPerDay(tempFilms);
+			SchedPolicyHandler.setMoviesPerDay(tempFilms);
 			setOptChanged();
 		}
 		else if (sender == lbBetween)
 		{
 			int tempMin = 5 * lbBetween.getSelectedIndex();
 			//System.out.println("BtwnMin:"+tempMin);
-			SchedPolicy.setBetweenMinutes(tempMin);
+			SchedPolicyHandler.setBetweenMinutes(tempMin);
 			setOptChanged();
 		}	
 		else if (sender == lbMealMin)
 		{
 			int tempMin = 30 + (30* lbMealMin.getSelectedIndex());
 			//System.out.println("MealMin:"+tempMin);
-			SchedPolicy.setMealMinutes(tempMin);
+			SchedPolicyHandler.setMealMinutes(tempMin);
 			setOptChanged();
 		}	
 		else if (sender == lbMealStart)
@@ -980,7 +980,7 @@ public class MyOptPane extends Sink implements ClickListener, ChangeListener,
 				strTime = tempTime.substring(0, 5) + ":00";
 			}
 			//System.out.println("Time:"+strTime);
-			SchedPolicy.setStartMealTime(strTime);
+			SchedPolicyHandler.setStartMealTime(strTime);
 			setOptChanged();
 			
 			// check for error condition
@@ -1004,7 +1004,7 @@ public class MyOptPane extends Sink implements ClickListener, ChangeListener,
 				strTime = tempTime.substring(0, 5) + ":00";
 			}
 			//System.out.println("Time:"+strTime);
-			SchedPolicy.setEndMealTime(strTime);
+			SchedPolicyHandler.setEndMealTime(strTime);
 			setOptChanged();
 			
 			// check for error condition
@@ -1016,7 +1016,7 @@ public class MyOptPane extends Sink implements ClickListener, ChangeListener,
 		else if (sender == lbTix)
 		{
 			int tempTix = lbTix.getSelectedIndex()+1;
-			SchedPolicy.setTicketsRequested(tempTix);
+			SchedPolicyHandler.setTicketsRequested(tempTix);
 			setOptChanged();
 			//System.out.println("Tix:"+tempTix);
 		}	
@@ -1041,7 +1041,7 @@ public class MyOptPane extends Sink implements ClickListener, ChangeListener,
 		if (cbOG.isChecked())
 			theaters = theaters | Constants.THEATER_OG;
 
-		SchedPolicy.setTheaterMap(theaters);
+		SchedPolicyHandler.setTheaterMap(theaters);
 		setOptChanged();
 		//System.out.println("theaterMap:"+cbPC.isChecked()+" "+cbSLC.isChecked()+
 		//		" "+cbSV.isChecked()+" "+cbOG.isChecked()+" "+theaters);
@@ -1137,7 +1137,7 @@ public class MyOptPane extends Sink implements ClickListener, ChangeListener,
                 sysErrors.setHTML("");
             
             // change start date
-            SchedPolicy.setFirstMovieIndex(pickStart.getSelectedDayIndex());
+            SchedPolicyHandler.setFirstMovieIndex(pickStart.getSelectedDayIndex());
             setOptChanged();
             //System.out.println("Index:"+pickStart.getSelectedDayIndex());
         }
@@ -1169,7 +1169,7 @@ public class MyOptPane extends Sink implements ClickListener, ChangeListener,
                 sysErrors.setHTML("");
             
             // change end date
-            SchedPolicy.setLastMovieIndex(pickEnd.getSelectedDayIndex());
+            SchedPolicyHandler.setLastMovieIndex(pickEnd.getSelectedDayIndex());
             setOptChanged();            
         }
 

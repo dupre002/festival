@@ -5,14 +5,14 @@ import java.util.HashMap;
 import com.digitalenergyinc.fest.client.Constants;
 import com.digitalenergyinc.fest.client.DataChangeListener;
 import com.digitalenergyinc.fest.client.ServerListener;
-import com.digitalenergyinc.festival.client.Sink;
 import com.digitalenergyinc.fest.client.control.MovieHandler;
-import com.digitalenergyinc.fest.client.control.Summary;
+import com.digitalenergyinc.fest.client.control.SummaryHandler;
 import com.digitalenergyinc.fest.client.control.User;
 import com.digitalenergyinc.fest.client.model.MovieRPC;
 import com.digitalenergyinc.fest.client.model.ShowingRPC;
 import com.digitalenergyinc.fest.client.model.TheaterGroup;
 import com.digitalenergyinc.fest.client.model.UtilTimeRPC;
+import com.digitalenergyinc.festival.client.Sink;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.DeferredCommand;
 import com.google.gwt.user.client.IncrementalCommand;
@@ -1214,10 +1214,10 @@ ChangeListener, MouseListener
 					(sender.getTitle().equals("High")) ||
 					(sender.getTitle().equals("Very High")))
 			{
-				int ranked = Summary.getMoviesRanked() + 1;
-				int unranked = Summary.getMoviesUnranked() - 1;
-				Summary.setMoviesRanked(ranked);
-				Summary.setMoviesUnranked(unranked);
+				int ranked = SummaryHandler.getMoviesRanked() + 1;
+				int unranked = SummaryHandler.getMoviesUnranked() - 1;
+				SummaryHandler.setMoviesRanked(ranked);
+				SummaryHandler.setMoviesUnranked(unranked);
 			}
 		}
 

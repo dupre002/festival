@@ -5,7 +5,7 @@ import com.digitalenergyinc.fest.client.ServerListener;
 import com.digitalenergyinc.festival.client.Sink;
 import com.digitalenergyinc.fest.client.control.MovieHandler;
 import com.digitalenergyinc.fest.client.control.ScheduleHandler;
-import com.digitalenergyinc.fest.client.control.Summary;
+import com.digitalenergyinc.fest.client.control.SummaryHandler;
 import com.digitalenergyinc.fest.client.control.TicketHandler;
 import com.digitalenergyinc.fest.client.control.User;
 import com.digitalenergyinc.fest.client.model.ShowingRPC;
@@ -227,10 +227,10 @@ public class ReservePane extends Sink implements ClickListener, TableListener,
 		Grid schedTable = new Grid(2,2);
 		HTML sched1 = new HTML("Score:");
 		sched1.setTitle("The strength of your schedule (on scale of 0 to 100).");
-		schedScore.setText(String.valueOf(Summary.getSchedScore()));
+		schedScore.setText(String.valueOf(SummaryHandler.getSchedScore()));
 		HTML sched2 = new HTML("Relative Score:");
 		sched2.setTitle("The sum of rankings of films on your schedule.");
-		schedNScore.setText(String.valueOf(Summary.getSchedNScore()));
+		schedNScore.setText(String.valueOf(SummaryHandler.getSchedNScore()));
 		
 		schedTable.setStyleName("sched-Film-Font");
 		schedTable.setWidget(0, 0, sched2);
@@ -465,15 +465,15 @@ public class ReservePane extends Sink implements ClickListener, TableListener,
 					tixTB.setEnabled(false);
 					
 					// set reschedule needed
-					Summary.rescheduleNeedUpdate(2);
+					SummaryHandler.rescheduleNeedUpdate(2);
 				}
 			}
 		}
 		
 		// check reschedule status
-		if (Summary.isRescheduleNeeded())
+		if (SummaryHandler.isRescheduleNeeded())
 		{
-			reschedMsg.setText(Summary.getReschedReasonMsg());
+			reschedMsg.setText(SummaryHandler.getReschedReasonMsg());
 			reschedButton.setEnabled(true);
 		}
 		else
@@ -717,9 +717,9 @@ public class ReservePane extends Sink implements ClickListener, TableListener,
 	private void processSoldOut()
 	{
 		// mark summary as needing reschedule and update status panel
-		Summary.rescheduleNeedUpdate(2);
+		SummaryHandler.rescheduleNeedUpdate(2);
 		reschedButton.setEnabled(true);
-		reschedMsg.setText(Summary.getReschedReasonMsg());
+		reschedMsg.setText(SummaryHandler.getReschedReasonMsg());
 		
 		// mark showing on reservation list as sold out
 		filmGrid.clearCell(selectedRow, COL_BUTTON);
@@ -757,9 +757,9 @@ public class ReservePane extends Sink implements ClickListener, TableListener,
 			return;
 		
 		// mark summary as needing reschedule and update status panel
-		Summary.rescheduleNeedUpdate(2);
+		SummaryHandler.rescheduleNeedUpdate(2);
 		reschedButton.setEnabled(true);
-		reschedMsg.setText(Summary.getReschedReasonMsg());
+		reschedMsg.setText(SummaryHandler.getReschedReasonMsg());
 		
 		// mark showing on reservation list as sold out
 		filmGrid.clearCell(selectedRow, COL_BUTTON);
@@ -789,9 +789,9 @@ public class ReservePane extends Sink implements ClickListener, TableListener,
 			return;
 		
 		// mark summary as needing reschedule and update status panel
-		Summary.rescheduleNeedUpdate(2);
+		SummaryHandler.rescheduleNeedUpdate(2);
 		reschedButton.setEnabled(true);
-		reschedMsg.setText(Summary.getReschedReasonMsg());
+		reschedMsg.setText(SummaryHandler.getReschedReasonMsg());
 		
 		// mark showing on reservation list as available
 		filmGrid.clearCell(selectedRow, COL_BUTTON);
