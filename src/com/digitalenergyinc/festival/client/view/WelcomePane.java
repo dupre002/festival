@@ -1,6 +1,8 @@
 package com.digitalenergyinc.festival.client.view;
 
 
+import org.gwtwidgets.client.util.Location;
+import org.gwtwidgets.client.util.WindowUtils;
 import org.mcarthur.sandy.gwt.login.client.LoginPanel;
 
 import com.digitalenergyinc.fest.client.ServerListener;
@@ -13,7 +15,9 @@ import com.digitalenergyinc.fest.client.control.TicketHandler;
 import com.digitalenergyinc.fest.client.control.User;
 import com.digitalenergyinc.fest.client.tickets.TicketPackageRPC;
 import com.google.gwt.user.client.Command;
+import com.google.gwt.user.client.Cookies;
 import com.google.gwt.user.client.DeferredCommand;
+import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.VerticalPanel;
@@ -42,6 +46,7 @@ public class WelcomePane extends Sink
 	private HTML tickets1;								// ticket info
 	private HTML error = new HTML("");					// error message
 	private boolean isBack = false;						// is welcomed back
+	private boolean icalAuth = false;                   // returning from auth
 
 	/**
 	 * Every Sink needs an init that defines the menu title and description.
@@ -230,6 +235,15 @@ public class WelcomePane extends Sink
 		public void onServerEnd(String actionID, Object result)
 		{
 			displayLoggedIn();
+			
+			// if relogging in after getting ical auth
+			if (icalAuth)
+			{
+			    // clear cookies and go to my schedule
+			    Cookies.removeCookie("FestUserID");
+			    Cookies.removeCookie("FestUserToken");
+			    History.newItem("My Schedule");
+			}
 		}
 		
 		/**
@@ -248,11 +262,32 @@ public class WelcomePane extends Sink
 	 * Called just after this sink is shown.
 	 */
 	public void onShow() {	
-		// load error message if present
-		if (!User.getError().equalsIgnoreCase(""))
-			error.setHTML(User.getError());
+	    // check if we've returned from getting authorization 
+	    // to export calendar by checking for token parameter in the URL
+	    Location loc = WindowUtils.getLocation();
+	    String requestParam = loc.getParameter("token");
 
-		if (User.getTokenID() == 0)
-			onLogOut();	  
+	    // if token found, go to My Schedule screen
+	    if (requestParam != null)
+	    {
+	        // get userid and token from cookies and log them back in
+	        String tempUser = Cookies.getCookie("FestUserID");
+	        String tempToken = Cookies.getCookie("FestUserToken");
+	        
+	        icalAuth = true;
+	        if (tempUser != null)
+            {
+	            User.loginAgain(tempUser,tempToken);
+            }	        
+	    }
+	    else
+	    {
+	        // load error message if present
+	        if (!User.getError().equalsIgnoreCase(""))
+	            error.setHTML(User.getError());
+
+	        if (User.getTokenID() == 0)
+	            onLogOut();	  
+	    }		
 	}
 }
