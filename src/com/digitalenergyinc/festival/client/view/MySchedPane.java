@@ -52,7 +52,7 @@ import com.google.gwt.widgetideas.client.ProgressBar;
  * <p>Copyright: Copyright (c) 2007</p>
  * <p>Company: Digital Energy, Inc.</p>
  * @author Rene Dupre
- * @version 1.0
+ * @version 1.0 
  */ 
 public class MySchedPane extends Sink implements ClickListener, ChangeListener,
 		LogoutListener
@@ -140,6 +140,7 @@ public class MySchedPane extends Sink implements ClickListener, ChangeListener,
 	private String authURL = null;			// google authSub URL
 	private HTML expDescr1;					// instructions
 	private HTML   icalLink;				// formed URL for authSub
+	private String returnURL="festival.html";
 	
 	private int waitCount = 0;				// counter of how many loading
 	private boolean isLoaded = false;		// indicator if data is loaded
@@ -597,7 +598,7 @@ public class MySchedPane extends Sink implements ClickListener, ChangeListener,
 		if (authURL == null)
 		{
 			// need token;  have user log in for us to get token
-			ICalHandler.getAuthSubURL();				
+			ICalHandler.signin(returnURL);				
 			// **Look for answer in call back!
 		}		
 	}
@@ -998,7 +999,6 @@ public class MySchedPane extends Sink implements ClickListener, ChangeListener,
 		public void onServerEnd(String actionID, Object result)
 		{
 		    recreateGuide();
-			
 		}
 		
 		/**
@@ -1336,7 +1336,7 @@ public class MySchedPane extends Sink implements ClickListener, ChangeListener,
 		public void onServerStart(String inDescr)
 		{
 			showWait(inDescr);
-			waitCount++;
+			//waitCount++;
 		}
 
 		/**
@@ -1347,18 +1347,20 @@ public class MySchedPane extends Sink implements ClickListener, ChangeListener,
 		public void onServerEnd(String actionID, Object result)
 		{
 			sysErrors.setHTML("");
-			waitCount--;
-			if (waitCount == 0)
-				hideWait();		
+
+			waitCount = 0;
+			hideWait();		
 			
-			// get resulting Summary from server
+			// get resulting Token from server
 			authURL = (String) result;
+			System.out.println("authToken="+authURL);
+			expDescr1.setHTML("Found token: "+authURL);  
 			//String tempStr = "<a href="+authURL+">Authorize</a>";
 			//icalLink.setHTML(tempStr);
-			goButton.setEnabled(false);
+			goButton.setEnabled(true);  // temp set to true.
 			//expDescr1.setHTML("Ok, click on the link below to log in to your " +
 			//		"Google calendar.");
-			exportStep2();
+			//exportStep2();
 		}
 
 		/**
@@ -1382,13 +1384,13 @@ public class MySchedPane extends Sink implements ClickListener, ChangeListener,
 	 * Called just after this sink is shown.
 	 */
 	public void onShow() 
-	{
+	{	    
 		// if there is an authURL, we may be returning from the authorization
 		// to export to their google calendar
 		//if (authURL != null)
 		//{
-			// check if we've returned from getting authorization to export calendar
-			// by checking for a token parameter in the URL
+			// check if we've returned from getting authorization 
+			// to export calendar by checking for token parameter in the URL
 			Location loc = WindowUtils.getLocation();
 			String requestParam = loc.getParameter("token");
 
@@ -1401,13 +1403,16 @@ public class MySchedPane extends Sink implements ClickListener, ChangeListener,
 				mainVP.remove(titleHP);		
 				mainVP.remove(outerHP);				
 				mainVP.add(exportVP);		
+				// token found, so remove export screen and sign in again
+                // to save token to cookie
+				ICalHandler.signin(returnURL);   
 			}
 			else
-			{
+			{			    
 				mainVP.remove(exportVP);
 				mainVP.add(titleHP);		
 				mainVP.add(outerHP);	
-				exportVP.clear();
+				exportVP.clear();			
 			}
 		//}
 		
