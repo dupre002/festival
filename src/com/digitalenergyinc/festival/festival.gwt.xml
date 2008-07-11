@@ -27,4 +27,7 @@
 
 	<!-- Specify the RPC Common classes.                      -->
 	<servlet path='/RPCCommonService' class='com.digitalenergyinc.fest.server.RPCCommonServiceImpl'/>
+
+    <!-- Specify the HTTP Proxy class.                        -->
+	<servlet path='/HTTPProxy' class='com.digitalenergyinc.fest.server.beans.HTTPProxy'/> 
 </module>

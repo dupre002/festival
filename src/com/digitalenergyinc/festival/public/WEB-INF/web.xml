@@ -35,6 +35,17 @@
     <servlet-name>RPCCommonService</servlet-name>
     <url-pattern>/RPCCommonService</url-pattern>
   </servlet-mapping>
+  
+  <!--HTTP Proxy servlets for Google ical authorization -->
+  <servlet>
+    <servlet-name>HTTPProxy</servlet-name>
+    <servlet-class>com.digitalenergyinc.fest.server.beans.HTTPProxy</servlet-class>
+  </servlet>
+  
+  <servlet-mapping>
+    <servlet-name>HTTPProxy</servlet-name>
+    <url-pattern>/HTTPProxy</url-pattern>
+  </servlet-mapping>
 	
 	  <!-- The Welcome File List -->
   <welcome-file-list>
