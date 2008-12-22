@@ -1,5 +1,5 @@
 body {
-	background-color: #edebd2; /* main light cream */
+	background-color: #756a48; /* main darker brown */
 	color: black;
 	font-family: Arial, Helvetica, sans-serif;
 	font: small/ 1.2em arial, helvetica, clean, sans-serif;
@@ -14,9 +14,10 @@ a {
 	color: black; /* black */
 }
 
-a:visited {
-	
-}
+a:link{color:#ffffff}      /* white  */
+a:visited{color:#ffffff}
+a:active{color:#ffffff}
+
 
 .gwt-BorderedPanel {
 	
@@ -35,9 +36,9 @@ a:visited {
 }
 
 .gwt-DialogBox {
-	sborder: 8px solid #edebd2; /* main light cream */
+	sborder: 8px solid #756a48; /* main darker brown */
 	border: 2px outset;
-	background-color: #eedb74; /* dark yellow accent */
+	background-color: #c2b576; /* cream accent */
 }
 
 .gwt-DialogBox .Caption {
@@ -100,7 +101,7 @@ a:visited {
 }
 
 .gwt-MenuBar .gwt-MenuItem-selected {
-	background-color: #eedb74; /* dark yellow accent */
+	background-color: #c2b576; /* cream accent */
 }
 
 .gwt-PasswordTextBox {
@@ -327,7 +328,7 @@ a:visited {
 
 .goog-date-picker .selected {
 	font: menu;
-	background-color: #eedb74; /* dark yellow accent */
+	background-color: #c2b576; /* cream accent */
 	color: blue;
 }
 
@@ -342,22 +343,21 @@ a:visited {
 }
 
 .fest-week {
-	background-color: #edebd2;   /* main light cream */
+	background-color: #756a48; /* main darker brown */
 }
 
 /* -------------- Schedule Specific Styles ------------------------------------------ */
 	/* Formatting for main panel container */
-.film-Sink { /*border: 8px solid #006B3D;		 darker green */
-	/*background-color: #00B366;		 main green */
-	border: 8px solid #eedb74; /* dark yellow accent */
-	background-color: #edebd2; /* main light cream */
+.film-Sink { 
+	border: 8px solid #c2b576; /* cream accent */
+	background-color: #756a48; /* main darker brown */
 	width: 100%;
 	height: 24em;
 }
 
 /* Formatting for copyright info on bottom of page */
 .film-Copy {
-	background-color: #edebd2; /* main light cream */
+	background-color: #756a48; /* main darker brown */
 	width: 100%;
 	font-size: .7em;
 }
@@ -376,37 +376,37 @@ a:visited {
 
 /* Formatting for a popup box */
 .film-Popup {
-	background-color: #eedb74; /* dark yellow accent */
+	background-color: #c2b576; /* cream accent */
 	margin: 1px;
 	border-style: groove;
 	border-width: thick;
-	border-color: #edebd2; /* main light cream */
+	border-color: #756a48; /* main darker brown */
 	width: 400px;
 	height: 300px;
 }
 
 /* Formatting for a help box */
 .film-Help {
-	background-color: #eedb74; /* dark yellow accent */
+	background-color: #c2b576; /* cream accent */
 	margin: 1px;
 	border-style: groove;
 	border-width: thick;
-	border-color: #edebd2; /* main light cream */
+	border-color: #756a48; /* main darker brown */
 	width: 75%;
 	height: 60%;
 }
 
 /* Formatting for dividing panels within the main panel */
 .film-Divide {
-	border-bottom: 8px solid #eedb74; /* dark yellow accent */
-	background-color: #edebd2; /* main light cream */
+	border-bottom: 8px solid #c2b576; /* cream accent */
+	background-color: #756a48; /* main darker brown */
 	width: 100%;
 }
 
 /* Formatting for side (subSink) menus */
 .film-SideMenu {
-	border: 8px solid #eedb74; /* dark yellow accent */
-	background-color: #edebd2; /* main light cream */
+	border: 8px solid #c2b576; /* cream accent */
+	background-color: #756a48; /* main darker brown */
 	width: 100%;
 	height: 12em;
 }
@@ -432,21 +432,22 @@ a:visited {
 	margin-right: 11px;
 	cursor: pointer;
 	cursor: hand;
+	color: white;
 }
 
 /* Formatting for sinkItem (top menu bar) that is selected */
 .film-List .film-SinkItem-selected {
-	background-color: #eedb74; /* dark yellow accent */
+	background-color: #c2b576; /* cream accent */
 }
 
 /* Formatting for the item selected */
 .film-List-selected {
-	background-color: #eedb74; /* dark yellow accent */
+	background-color: #c2b576; /* cream accent */
 }
 
 /* Formatting for the item not selected */
 .film-List-notSelected {
-	background-color: #edebd2; /* main light cream */
+	background-color: #756a48; /* main darker brown */
 }
 
 /* Flow panel formatting (to make boxes flow across screen) */
@@ -511,26 +512,26 @@ a:visited {
 	margin: 1px;
 	border-style: groove;
 	border-width: thick;
-	border-color: #edebd2; /* main light cream */
+	border-color: #756a48; /* main darker brown */
 }
 
 /* Theater schedule heading formatting */
 .sched-Theater-Hdg {
 	font: bold;
 	font-size: .8em;
-	background-color: #eedb74; /* dark yellow accent */
+	background-color: #c2b576; /* cream accent */
 }
 
 /* Gauge heading formatting */
 .sched-Gauge-Hdg {
 	font: bold;
 	font-size: .8em;
-	background-color: #eedb74; /* dark yellow accent */
+	background-color: #c2b576; /* cream accent */
 }
 
 /* Day diplayed on schedule heading formatting */
 .sched-Day-Hdg {
-	background-color: #edebd2; /* main light cream */
+	background-color: #756a48; /* main darker brown */
 	padding: 2px 10px 2px 10px;
 	font-size: .8em;
 	font: bold;
@@ -539,7 +540,7 @@ a:visited {
 
 /* General heading formatting */
 .film-Info {
-	background-color: #edebd2; /* main light cream */
+	background-color: #756a48; /* main darker brown */
 	padding: 2px 10px 2px 10px;
 	font-size: .8em;
 	width: 100%;
@@ -551,7 +552,7 @@ a:visited {
 
 .sched-Film-Link {
 	text-decoration: underline;
-	color: #0000cc; /* blue link color */
+	color: #000000; /* black link color */
 	cursor: pointer;
 }
 
@@ -568,14 +569,11 @@ a:visited {
 /* Formatting for calendar grid */
 .sched-Cal-Cell {
 	font-size: .8em;
-	/*background-color: #E6FFF4;		*/ /* white-ish */ /* border-style: none;
-  border-width: thin;
-  border-color: #999999;		*/ /* light gray */
 }
 
 /* Formatting for the grid cells containing a film */
-.sched-Film-Cell { /* background-color: #006B3D; */ /* darker green */
-	background-color: #e1ebfb; /* light blue */
+.sched-Film-Cell { 
+	background-color: #FFF3CE; /* light tan */
 	height: 2em;
 	cursor: pointer;
 }
@@ -596,7 +594,7 @@ a:visited {
 
 /* Formatting for the grid cells NOT containing a film */
 .sched-NoFilm-Cell {
-	background-color: #edebd2; /* main light cream */
+	background-color: #756a48; /* main darker brown */
 	border-style: solid;
 	border-width: thin;
 	border-bottom: #999999 1px solid;
@@ -606,7 +604,7 @@ a:visited {
 
 /* Formatting for the gauge grid cells NOT containing a film */
 .gauge-NoFilm-Cell {
-	background-color: #edebd2; /* main light cream */
+	background-color: #756a48; /* main darker brown */
 	height: 2em;
 	cursor: default;
 }
@@ -630,7 +628,7 @@ a:visited {
 	width: 100%;
 	border-style: solid;
 	border-width: thin;
-	border-color: black; /* light gray */
+	border-color: black; 
 }
 
 /* Formatting for a box around related items */
@@ -641,157 +639,4 @@ a:visited {
 /* Formatting for faq answers */
 .faq {
 	color: white;
-}
-
-.draft-layouts {
-	margin: 8px;
-}
-
-.draft-layouts-Label {
-	background-color: #006B3D; /* darker green */
-	font-weight: bold;
-	margin-top: 1em;
-	padding: 2px 0px 2px 0px;
-	width: 100%;
-}
-
-/* Formatting for information panel contrast to draft-Info */
-.draft-Info-Contrast {
-	background-color: #00B366; /* main green */
-	padding: 2px 10px 2px 10px;
-	font-size: .8em;
-}
-
-/* Formatting for center data panel */
-.draft-Detail {
-	margin-top: 8px;
-	margin-bottom: 8px;
-	font-size: smaller;
-	background-color: #E6FFF4; /* white-ish */
-}
-
-/* Formatting for col hdgs in table */
-.draft-colHdg {
-	padding-top: 8px;
-	font-size: .7em;
-	font: italic;
-}
-
-/* Formatting for an image */
-.draft-Image {
-	margin: 8px;
-}
-
-/* Position Panel row format for a player I drafted */
-.draft-Posn-myDraft {
-	width: 100%;
-	font: italic;
-	background-color: #66FFBE; /* neon/blue-ish */
-	cursor: auto;
-}
-
-/* Position Panel row format for a player they drafted */
-.draft-Posn-theirDraft {
-	font: italic;
-	background-color: #BBDB88; /* green family */
-	cursor: auto;
-}
-
-/* Position Panel row format for a player I drafted */
-.draft-Turn-taken {
-	font: italic;
-	background-color: #899891; /* darker Gray */
-}
-
-/* Current turn format of row in list */
-.draft-Turn-current {
-	font: italic;
-	background-color: #B35A00; /* brown-ish family */
-}
-
-/* Formatting for around an input text or list box */
-.draft-Input {
-	margin-left: 24px;
-	margin-bottom: 8px;
-}
-
-/* Formatting for an internal hyperlink */
-.draft-Link {
-	padding-right: 8px;
-}
-
-/* Formatting for a box around an owner heading in list */
-.draft-OwnerList-Hdg {
-	border-style: solid;
-	border-width: thin;
-	border-color: #006B3D; /* darker green */
-}
-
-/* Formatting for a box around an owner name in list */
-.draft-OwnerList-Box {
-	margin: 4px;
-	padding-right: 8px;
-	padding-bottom: 8px;
-	border-style: solid;
-	border-width: thin;
-	border-color: #006B3D; /* darker green */
-}
-
-/* Formatting for a box around position windows */
-.draft-Posn-Box {
-	margin: 4px;
-	border-style: inset;
-	border-width: medium;
-	border-color: #006B3D; /* darker green */
-}
-
-/* Formatting for default font */
-.draft-Font {
-	font-size: .8em;
-}
-
-/* Formatting for bolding a font */
-.draft-Bold {
-	font-weight: bold;
-}
-
-/* Formatting for text in a grid to align to the right */
-.draft-AlignRight {
-	text-align: right;
-}
-
-/* Formatting for text in a grid to align to the center */
-.draft-AlignCenter {
-	text-align: center;
-}
-
-/* Formatting for icon you can click on */
-.draft-Icon {
-	cursor: pointer;
-	cursor: hand;
-}
-
-/* Formatting for a row in a grid - to set it apart like lines on a report */
-.draft-RowEven {
-	background-color: #50A17E; /* pastel green */
-}
-
-/* Formatting for a row in a grid - to set it apart like lines on a report */
-.draft-RowOdd {
-	background-color: #E6FFF4; /* white-ish */
-}
-
-/* Formatting for a row in a grid - bold the top border to set it apart */
-.draft-RowTop {
-	border-style: none;
-	border-top-style: solid;
-	border-top-width: thin;
-	border-top-color: black;
-}
-
-/* Formatting for the seconds of the timer */
-.draft-Timer {
-	font-size: 1.5em;
-	font: bold;
-	padding-left: 16px;
 }
