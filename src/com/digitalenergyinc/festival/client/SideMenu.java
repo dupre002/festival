@@ -69,14 +69,14 @@ public void addMenu(final SinkInfo info) {
    */
   public void setMenuSelection(String name) {
     if (selectedMenu != -1) {
-      list.getWidget(selectedMenu).removeStyleName("draft-SinkItem-selected");
+      list.getWidget(selectedMenu).removeStyleName("film-SinkItem-selected");
     }
     
     for (int i = 0; i < menuItems.size(); ++i) {
       SinkInfo info = (SinkInfo) menuItems.get(i);
       if (info.getName().equals(name)) {
     	  selectedMenu = i;
-        list.getWidget(selectedMenu).addStyleName("draft-SinkItem-selected");
+        list.getWidget(selectedMenu).addStyleName("film-SinkItem-selected");
         return;
       }
     }
