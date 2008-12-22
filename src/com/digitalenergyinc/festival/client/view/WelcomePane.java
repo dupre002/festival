@@ -5,15 +5,17 @@ import org.gwtwidgets.client.util.Location;
 import org.gwtwidgets.client.util.WindowUtils;
 import org.mcarthur.sandy.gwt.login.client.LoginPanel;
 
+import com.digitalenergyinc.fest.client.DataChangeListener;
 import com.digitalenergyinc.fest.client.ServerListener;
-import com.digitalenergyinc.festival.client.Sink;
 import com.digitalenergyinc.fest.client.control.MovieHandler;
 import com.digitalenergyinc.fest.client.control.ScheduleHandler;
 import com.digitalenergyinc.fest.client.control.SummaryHandler;
 import com.digitalenergyinc.fest.client.control.TheaterHandler;
 import com.digitalenergyinc.fest.client.control.TicketHandler;
 import com.digitalenergyinc.fest.client.control.User;
+import com.digitalenergyinc.fest.client.model.ShowingRPC;
 import com.digitalenergyinc.fest.client.tickets.TicketPackageRPC;
+import com.digitalenergyinc.festival.client.Sink;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.Cookies;
 import com.google.gwt.user.client.DeferredCommand;
@@ -133,6 +135,8 @@ public class WelcomePane extends Sink
 		// initialize singletons
 		MovieHandler mH = MovieHandler.instance();
 		ScheduleHandler sh = ScheduleHandler.instance();
+		SummaryHandler ssh = SummaryHandler.instance();
+		SummaryHandler.addChangeListener(new myChangeListener());
 		TheaterHandler th = TheaterHandler.instance();
 		
 
@@ -257,6 +261,35 @@ public class WelcomePane extends Sink
 			loginPanel.focus();
 		}
 	}	
+	
+	  /**
+	   * Listener class used to take action when data has changed or selected.
+	   */
+	  class myChangeListener implements DataChangeListener
+	  {
+	      /**
+	       * Used to take action when data has changed .
+	       */
+	      public void onDataChange()
+	      {
+	          // update data on screen from Summary
+	          summary1.setHTML("You have ranked " + SummaryHandler.getMoviesRanked()+" films");
+	          summary1.setVisible(true);
+	          summary2.setHTML("You have " + SummaryHandler.getMoviesUnranked()+" films unranked.");
+	          summary2.setVisible(true);
+	          int totalTix = SummaryHandler.getPremiereTixSched() + SummaryHandler.getRegularTixSched();
+	          summary3.setHTML("You have " +totalTix+" films on your schedule.");
+	      }
+
+	      /**
+	       * Used to take action when data is selected.
+	       * @param ShowingRPC  the item changed or selected (optional).
+	       */
+	      public void onDataSelected(ShowingRPC inItem)
+	      {
+
+	      }
+	  }
 
 	/**
 	 * Called just after this sink is shown.
