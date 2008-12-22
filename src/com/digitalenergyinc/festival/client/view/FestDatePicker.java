@@ -176,7 +176,7 @@ ChangeListener
         String myDate = lbDate.getItemText(inIndex);
         try
         {             
-            myStartDate = format.parse(myDate+defaultTime);
+            myStartDate = format.parse(myDate+defaultTime);            
         }
         catch (Exception e)
         {
@@ -262,7 +262,8 @@ ChangeListener
             // is within festival dates
             String dayPicked = tempPicker.selectedDate().toString().substring(8, 10);
             //System.out.println("date picked! "+dayPicked);
-            selectedDayIndex = Integer.parseInt(dayPicked) - 17;
+            int myStartDay = Integer.parseInt(Constants.FESTIVAL_START_DATE.substring(7));
+            selectedDayIndex = Integer.parseInt(dayPicked) - myStartDay;
             lbDate.setSelectedIndex(selectedDayIndex);
             popup.hide();
             fireDataChangeListeners();
