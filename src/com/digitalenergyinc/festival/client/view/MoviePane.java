@@ -125,10 +125,8 @@ ChangeListener, MouseListener
 	private String soldOutURL = "images/soldOut.gif";   // URL for sold out
 	private String ticketedURL = "images/ticketsized.gif";
 
-	/** HashMap for showings
-	 * @gwt.typeArgs <java.lang.String, com.digitalenergyinc.fest.client.model.ShowingRPC>
-	 */
-	private HashMap myShows;
+	private HashMap<java.lang.String, com.digitalenergyinc.fest.client.model.ShowingRPC> 
+	           myShows;
 
 	// data elements
 	//private MovieRPC[] filmList;			// list of films
