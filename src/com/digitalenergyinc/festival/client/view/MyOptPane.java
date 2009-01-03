@@ -1220,9 +1220,10 @@ public class MyOptPane extends Sink implements ClickListener, ChangeListener,
 		
 		/**
 		 * Show the error message from server.
+		 * @param String actionID to identify server action, no result expected.
 		 * @param String descriptive error text to display.
 		 */
-		public void onServerError(String inError)
+		public void onServerError(String actionID, String inError)
 		{
 			sysErrors.setHTML(inError);
 		}
@@ -1255,9 +1256,10 @@ public class MyOptPane extends Sink implements ClickListener, ChangeListener,
         
         /**
          * Show the error message from server.
+         * @param String actionID to identify server action, no result expected.
          * @param String descriptive error text to display.
          */
-        public void onServerError(String inError)
+        public void onServerError(String actionID, String inError)
         {
             
         }
@@ -1299,9 +1301,10 @@ public class MyOptPane extends Sink implements ClickListener, ChangeListener,
         
         /**
          * Show the error message from server.
+         * @param String actionID to identify server action.
          * @param String descriptive error text to display.
          */
-        public void onServerError(String inError)
+        public void onServerError(String actionID, String inError)
         {
             sysErrors.setHTML(inError);
         }

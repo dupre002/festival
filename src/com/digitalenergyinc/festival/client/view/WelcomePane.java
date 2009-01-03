@@ -252,9 +252,10 @@ public class WelcomePane extends Sink
 		
 		/**
 		 * Show the error message from server.
+		 * @param String actionID to identify server action.
 		 * @param String descriptive error text to display.
 		 */
-		public void onServerError(String inError)
+		public void onServerError(String actionID, String inError)
 		{
 			error.setHTML(inError); 
 			loginPanel.reenable(); // allow another attempt

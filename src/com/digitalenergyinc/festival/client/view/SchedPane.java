@@ -489,9 +489,10 @@ public class SchedPane extends Sink implements ClickListener, LogoutListener
 		
 		/**
 		 * When server activity has an error.
+		 * @param String actionID to identify server action.
 		 * @param String description of error.
 		 */
-		public void onServerError(String inError)
+		public void onServerError(String actionID, String inError)
 		{
 			//System.out.println("SP: error "+inError);
 			sysErrors.setHTML(inError);
