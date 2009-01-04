@@ -220,129 +220,76 @@ a:active{color:#ffffff}
 }
 
 /* -------------- Date Picker Styles  ----------------------------------- */
-.goog-date-picker {
+.gwt-DatePicker {
 	border: 1px solid black;
 	text-align: center;
 	vertical-align: middle;
+	background-color: #c2b576; /* cream accent */
 }
 
-.goog-date-picker .grid {
-	font: menu;
-	border-collapse: collapse;
-}
-
-.goog-date-picker .grid {
-	font: menu;
-	border-collapse: collapse;
-}
-
-.goog-date-picker .grid td {
-	border-width: 1px;
-	padding: 0px;
-	border-style: solid;
-	border-color: white;
-	height: 20px;
-	width: 4ex;
-}
-
-.goog-date-picker .week-names {
-	color: gray;
-	text-align: center;
-	font-size: 0.8em;
-}
-
-.goog-date-picker .week-numbers {
-	color: gray;
-	text-align: center;
-}
-
-.goog-date-picker .control {
-	font: san-serif;
-	font-size: 12pt;
-	text-align: center;
-	padding: 2px 2px 2px 2px;
-	margin: 0px 1px 0px 1px;
-}
-
-.goog-date-picker .title {
+.gwt-DatePicker .month-label {
 	border: 1px solid gray;
-	background: buttonface;
 	font: san-serif;
 	text-align: center;
 	vertical-align: middle;
-	width: 8ex;
 	font-size: 10pt;
 	padding: 1px 2px 1px 2px;
 }
 
-.goog-date-picker .control-today {
-	border: 1px solid gray;
-	background: buttonface;
-	font: san-serif;
-	text-align: center;
-	vertical-align: middle;
-	width: 25ex;
-	font-size: 10pt;
-}
-
-.goog-date-picker .control-menu {
-	margin: 0px 1px 0px 1px;
-}
-
-.goog-date-picker .control-block {
-	margin: 1px 1px 1px 1px;
-}
-
-.goog-date-picker .control-pane {
-	margin: 1px 1px 1px 1px;
-}
-
-.goog-date-picker .control-submenu {
+.gwt-DatePicker .calendar-view {
 	font: menu;
+	border-collapse: collapse;
 }
 
-.goog-date-picker .weekday {
+.gwt-DatePicker .calendar-view td {
+	border-width: 1px;
+	padding: 0px;
+	border-style: solid;
+	border-color: #FFFBE6;
+	height: 20px;
+	width: 4ex;
+}
+
+.gwt-DatePicker .day-title {
+	color: white;
 	text-align: center;
-	vertical-align: middle;
-	font: menu;
+	font-size: 0.8em;
 }
 
-.goog-date-picker .weekend-start {
-	/* background-color: rgb(255, 204, 204); */
-	text-align: center;
-	vertical-align: middle;
-	font: menu;
-}
-
-.goog-date-picker .weekend-end {
+.gwt-DatePicker .weekend {
 	/* background-color: rgb(255, 204, 204);  */
 	text-align: center;
 	vertical-align: middle;
 	font: menu;
 }
 
-.goog-date-picker .today {
+.gwt-DatePicker .selected-cell {
+	font: menu;
+	/*  background-color: #FFFBE6;  whitish accent-no work w highlighted */
+	color: white;
+	border-color: black;
+}
+
+.gwt-DatePicker .today-cell {
 	font: menu;
 	font-weight: bold !important;
 }
 
-.goog-date-picker .selected {
+.gwt-DatePicker .disabled-cell {
 	font: menu;
+	font-weight: bold !important;
 	background-color: #c2b576; /* cream accent */
-	color: blue;
 }
 
-.goog-date-picker .special {
+.gwt-DatePicker .highlighted-cell {
+	font: menu;
 	font-weight: bold !important;
-	background: #FF6347;
+	background-color: #756a48; /* main darker brown */
 }
 
-.goog-date-picker .other-month {
-	filter: Alpha(Opacity = 30);
-	opacity: 0.3;
-}
-
-.fest-week {
+.gwt-DatePicker .festival-cells {
+	font: menu;
+	font-weight: bold !important;
 	background-color: #756a48; /* main darker brown */
 }
 

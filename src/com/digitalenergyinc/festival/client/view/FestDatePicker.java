@@ -2,6 +2,7 @@ package com.digitalenergyinc.festival.client.view;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Vector;
 
 import com.digitalenergyinc.fest.client.Constants;
 import com.digitalenergyinc.fest.client.DataChangeListener;
@@ -15,12 +16,14 @@ import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.user.client.ui.Widget;
+import com.google.gwt.widgetideas.client.event.ChangeEvent;
+import com.google.gwt.widgetideas.client.event.ChangeHandler;
 import com.google.gwt.widgetideas.datepicker.client.DatePicker;
 
 /**
  * This is a widget that combines a list box and date picker for festival dates.
  * 
- * <p>Title: Test of a film calendar/guide.</p>
+ * <p>Title: Film Festival calendar/guide.</p>
  * <p>Description: Film Festival scheduler.</p>
  * <p>Copyright: Copyright (c) 2007</p>
  * <p>Company: Digital Energy, Inc.</p>
@@ -43,7 +46,7 @@ ChangeListener
     private Date festEnd = null;                     // festival end date
     private final MyPopup popup = new MyPopup();     // popup panel for calendar
     private String defaultTime;                      // default time (all zeros)
-    private ArrayList dataChangeListeners;   // list of listeners to this object
+    private ArrayList<DataChangeListener> dataChangeListeners;   // list of listeners to this object
 
     private static class MyPopup extends PopupPanel {
 
@@ -59,39 +62,30 @@ ChangeListener
       }
     
     /**
-     * Constructor used to set up widget for a specific theater.
+     * Constructor used to set up widget.
      * @param String inToolTip the tool tip for this widget.
      * @param String Name of date for this widget.
      * @param String default date to use in picker/text box (YYYY-MM-DD).
      */
     public FestDatePicker(String inToolTip, String inName, String inDefault)
     {
+        // NOTE must use deprecated methods until GWT supports Calendar.
         initWidget(mainHP);
-        dataChangeListeners = new ArrayList();
+        dataChangeListeners = new ArrayList<DataChangeListener>();
         DateTimeFormat format = DateTimeFormat.getFormat("yyyy-MM-dd hh:mm:ss"); 
         
         // set up defaults in picker
         pickerName = inName;
         myPicker.setTitle(inToolTip);
-        myPicker.showYearMonthListing(false);
-        myPicker.showTodayButton(false);
-        myPicker.showAdjacentMonths(false);
-        myPicker.showWeekOfYear(false);
-        myPicker.addChangeListener(new datePickerListener());
+
+        myPicker.addChangeHandler(new datePickerListener());
         defaultTime = " 00:00:00";
-        
-        // create a start date one day less to make datepicker work (it had milliseconds
-        // as part of date and you couldn't pick the start date)
-        int adjustDay = Integer.parseInt(Constants.FESTIVAL_START_DATE.substring(8, 10))-1;
-        String adjustedStart = Constants.FESTIVAL_START_DATE.substring(0, 7)
-               + "-"+adjustDay;
-        //System.out.println("adj date:"+adjustedStart);
         
         Date myStartDate = null;
         try
         {             
             myStartDate = format.parse(inDefault+defaultTime);
-            festStart = format.parse(adjustedStart+defaultTime);
+            festStart = format.parse(Constants.FESTIVAL_START_DATE+defaultTime);
             festEnd = format.parse(Constants.FESTIVAL_END_DATE+defaultTime);
         }
         catch (Exception e)
@@ -101,24 +95,20 @@ ChangeListener
         }
         
         // set a default date
-        myPicker.setFullDate(myStartDate);
+        myPicker.setSelectedDate(myStartDate, false);
         
         // set highlighting for festival week
-        int startDay = Integer.parseInt(Constants.FESTIVAL_START_DATE.substring(8, 10));
-        for (int i=0; i<11; i++)
+        Vector<Date> festDatesList = new Vector<Date>(Constants.MAX_DAYS+2);        
+        for (int i=0; i<Constants.MAX_DAYS; i++)
         {
-            try
-            { 
-                int nextDay = startDay + i;
-                String nextDate = Constants.FESTIVAL_START_DATE.substring(0, 7) +
-                    "-"+String.valueOf(nextDay);
-                myPicker.setSpecialDate(format.parse(nextDate+defaultTime), "fest-week");
-            }
-            catch (Exception e)
-            {
-                System.out.println("Error in setting special formatting for date.");
-            }
+            Date tempDate = new Date();
+            tempDate.setDate(festStart.getDate()+i);
+            tempDate.setMonth(festStart.getMonth());
+            tempDate.setYear(festStart.getYear());
+
+            festDatesList.add(tempDate);            
         }
+        myPicker.addVisibleDateStyles(festDatesList, "festival-cells");
         
         // set up listbox
         lbDate.setTitle(inToolTip);
@@ -185,7 +175,7 @@ ChangeListener
         }
         
         // set a default date
-        myPicker.setFullDate(myStartDate);
+        myPicker.setSelectedDate(myStartDate, false);
     }
     
     /**
@@ -200,6 +190,7 @@ ChangeListener
             // make popup for calendar
             
             popup.setWidget(myPicker);
+            popup.setWidth("150px");
             
             // Position the popup 1/3rd of the way down and across the screen, and
             // show the popup. Since the position calculation is based on the
@@ -236,34 +227,29 @@ ChangeListener
     /**
      * Listener class to handle when server activity occurs.
      */
-    class datePickerListener implements ChangeListener
+    class datePickerListener implements ChangeHandler<Date>
     {
         /**
          * Handles when date picker is clicked.
-         * @param Widget the incoming button clicked.
+         * @param ChangeEvent the event that occurred.
          */
-        public void onChange(Widget sender)
+        public void onChange(ChangeEvent event)
         {
-            DatePicker tempPicker = (DatePicker)sender;
+            // NOTE: must use deprecated methods until GWT supports Calendar.
             
-            // ERROR!?  compare to festStart never gave an equals, 
-            // so used 1 less day for start date
-            //System.out.println("date picked! "+tempPicker.selectedDate().compareTo(festStart));
-            // Date tempDate = tempPicker.selectedDate();
-            //System.out.println("pickeddate millis "+tempDate.getTime() +
-            //               "vx start millis "+festStart.getTime());
             // some error checking to make sure it is within festival dates
-            if (tempPicker.selectedDate().compareTo(festStart) < 0)
+            Date myDate = myPicker.getHighlightedDate();
+            //System.out.println("in Onchange! "+myDate+" "+festStart);
+            if (myDate.compareTo(festStart) < 0)
                 return;
             
-            if (tempPicker.selectedDate().compareTo(festEnd) > 0)
+            if (myDate.compareTo(festEnd) > 0)
                 return;
             
             // is within festival dates
-            String dayPicked = tempPicker.selectedDate().toString().substring(8, 10);
-            //System.out.println("date picked! "+dayPicked);
-            int myStartDay = Integer.parseInt(Constants.FESTIVAL_START_DATE.substring(7));
-            selectedDayIndex = Integer.parseInt(dayPicked) - myStartDay;
+            int dayPicked = myDate.getDate();
+            int myStartDay = Integer.parseInt(Constants.FESTIVAL_START_DATE.substring(8));
+            selectedDayIndex = dayPicked - myStartDay;
             lbDate.setSelectedIndex(selectedDayIndex);
             popup.hide();
             fireDataChangeListeners();

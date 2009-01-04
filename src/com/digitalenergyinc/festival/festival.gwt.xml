@@ -13,11 +13,8 @@
 	<!-- For login panel -->
 	<inherits name="org.mcarthur.sandy.gwt.login.Login"/>
 	
-	<!-- For progress bar -->
-	<inherits name='com.google.gwt.widgetideas.WidgetIdeas' /> 
-	
-	<!-- For date picker -->
-	<inherits name='com.google.gwt.widgetideas.datepicker.DatePicker'/>
+	<!-- For progress bar & date picker -->
+	<inherits name='com.google.gwt.widgetideas.WidgetIdeas' />   
 	
 	<!-- Specify the app entry point class.                   -->
 	<entry-point class='com.digitalenergyinc.festival.client.festival'/>
