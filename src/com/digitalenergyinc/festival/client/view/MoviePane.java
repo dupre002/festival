@@ -386,7 +386,7 @@ ChangeListener, MouseListener
                     for (int i=start; i < end; i++)
                     {
                         filmGrid.setText(i, 0, MovieHandler.getFilm(rqstRow).getTitle());
-                        filmGrid.setText(i, 1, MovieHandler.getFilm(rqstRow).getMovieID());
+                        filmGrid.setText(i, 1, MovieHandler.getFilm(rqstRow).getMovieCode());
                         filmGrid.setText(i, 2, MovieHandler.getFilm(rqstRow).getCategoryShortName());
 
                         if (User.getTokenID() != 0)
@@ -458,12 +458,12 @@ ChangeListener, MouseListener
 		filmTitle.setHTML("<b>"+myFilm.getTitle()+"</b>");
 
 		String filmURL = "images/movies/" + Constants.FESTIVAL_YEAR + "/"
-		                  + myFilm.getMovieID()+".jpg";
+		                  + myFilm.getMovieCode()+".jpg";
 		filmPic.setUrl(filmURL);
 		filmPic.setTitle("Still Image from Film");
 		filmDescr.setHTML(myFilm.getSynopsis());
 
-		movieIDDisplayed = myFilm.getMovieID();
+		movieIDDisplayed = myFilm.getMovieCode();
 		filmDetails1.setHTML(0, 0, "<b>Film Code:</b>");
 		filmDetails1.setText(0, 1, movieIDDisplayed);
 
@@ -658,8 +658,8 @@ ChangeListener, MouseListener
 			ShowingRPC myShow = (ShowingRPC) myShows.get(String.valueOf(i));
 			filmDetails2.setHTML(i+1, 1, utilTime.convertIndexToDay(myShow.getDayIndex()));
 			filmDetails2.setHTML(i+1, 2, myShow.getDisplayStartTime());
-			filmDetails2.setHTML(i+1, 3, utilTheater.convertTheaterID(myShow.getTheaterID()));
-			filmDetails2.setHTML(i+1, 4, utilTheater.convertTheaterIDtoGroup(myShow.getTheaterID()));
+			filmDetails2.setHTML(i+1, 3, myShow.getTheaterCode());
+			filmDetails2.setHTML(i+1, 4, utilTheater.convertTheaterIDtoGroup(myShow.getTheaterCode()));
 
 			// show icons for showings
 			HorizontalPanel hp3 = new HorizontalPanel();
@@ -1496,7 +1496,7 @@ ChangeListener, MouseListener
                 {
                     for (int i=startRow; i < endRow; i++)
                     {
-                        String tempID = MovieHandler.getFilm(i).getMovieID();
+                        String tempID = MovieHandler.getFilm(i).getMovieCode();
                         if (tempID.equalsIgnoreCase(MovieHandler.getFilmDetailID()))
                         {
                             //System.out.println("Reposition Row found."+i);

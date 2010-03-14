@@ -2,7 +2,7 @@ package com.digitalenergyinc.festival.client.view;
 
 import com.digitalenergyinc.fest.client.LogoutListener;
 import com.digitalenergyinc.fest.client.ServerListener;
-import com.digitalenergyinc.festival.client.Sink;
+import com.digitalenergyinc.fest.client.control.Festival;
 import com.digitalenergyinc.fest.client.control.MovieHandler;
 import com.digitalenergyinc.fest.client.control.ScheduleHandler;
 import com.digitalenergyinc.fest.client.control.SummaryHandler;
@@ -11,6 +11,7 @@ import com.digitalenergyinc.fest.client.control.User;
 import com.digitalenergyinc.fest.client.model.ShowingRPC;
 import com.digitalenergyinc.fest.client.model.TheaterGroup;
 import com.digitalenergyinc.fest.client.model.UtilTimeRPC;
+import com.digitalenergyinc.festival.client.Sink;
 import com.google.gwt.user.client.DeferredCommand;
 import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.IncrementalCommand;
@@ -342,7 +343,7 @@ public class ReservePane extends Sink implements ClickListener, TableListener,
 			filmGrid.setText(i, COL_TITLE, filmList[i].getMovieTitle());
 			
 			// film ID
-			HTML filmID = new HTML(filmList[i].getMovieID());
+			HTML filmID = new HTML(filmList[i].getMovieCode());
 			filmID.setStyleName("sched-Film-Link");
 			filmGrid.setWidget(i, COL_ID, filmID);
 			
@@ -372,8 +373,8 @@ public class ReservePane extends Sink implements ClickListener, TableListener,
 			}
 			
 			// theater
-			String myTheater = utilTheater.convertTheaterID(filmList[i].getTheaterID())
-				+ " / "+utilTheater.convertTheaterIDtoGroup(filmList[i].getTheaterID());
+			String myTheater = filmList[i].getTheaterCode()
+				+ " / "+utilTheater.convertTheaterIDtoGroup(filmList[i].getTheaterCode());
 			filmGrid.setText(i, COL_THEATER, myTheater);
 
 			// ranking
@@ -655,7 +656,8 @@ public class ReservePane extends Sink implements ClickListener, TableListener,
 		if (pass3)
 		{
 			// check availability of showing being bought from database	
-			MovieHandler.checkAvailability("rpChk1", selectedFilm.getMovieID(), 
+			MovieHandler.checkAvailability("rpChk1", Festival.getFestivalID(), 
+			        selectedFilm.getMovieID(), 
 					selectedFilm.getShowingID());
 			// ** Look for answer in availability listener
 		}
@@ -901,7 +903,7 @@ public class ReservePane extends Sink implements ClickListener, TableListener,
 		int loopCtr=0;
 		while (isFound == false)
 		{
-			if (filmList[loopCtr].getMovieID().equalsIgnoreCase(filmGrid.getText(row, COL_ID)))
+			if (filmList[loopCtr].getMovieCode().equalsIgnoreCase(filmGrid.getText(row, COL_ID)))
 			{
 				selectedFilm = filmList[loopCtr];
 				isFound = true;
@@ -922,7 +924,7 @@ public class ReservePane extends Sink implements ClickListener, TableListener,
 		{
 			// check for clicking on movie title link		
 			// set ID to view detail and send them to film list
-			MovieHandler.setFilmDetailID(selectedFilm.getMovieID());
+			MovieHandler.setFilmDetailID(selectedFilm.getMovieCode());
 			History.newItem("Films");
 		}
 		else if (col == COL_BUTTON)
@@ -984,7 +986,8 @@ public class ReservePane extends Sink implements ClickListener, TableListener,
 			}
 			
 			// now update in database
-			MovieHandler.updateShowingAvailability("rpUpd", selectedFilm.getMovieID(), 
+			MovieHandler.updateShowingAvailability("rpUpd", Festival.getFestivalID(), 
+			        selectedFilm.getMovieID(), 
 					selectedFilm.getShowingID(), 
 					selectedFilm.getIsSoldOut());
 			// ** look for answer in purchase Listener!!!

@@ -3,13 +3,13 @@
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="src" path="test"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry kind="lib" path="C:/java/gwt-windows-1.4.61/gwt-user.jar"/>
 	<classpathentry kind="var" path="JUNIT_HOME/junit.jar"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/festCommon"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/festServer"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/gwtStuff"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/gwtIncubator"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/gwt Widgets"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/log4j"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/festCommon"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/gwt1.5.3"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/gwtIncubator"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
