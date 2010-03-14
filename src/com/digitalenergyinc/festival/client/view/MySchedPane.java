@@ -600,7 +600,16 @@ public class MySchedPane extends Sink implements ClickListener, ChangeListener,
 			// need token;  have user log in for us to get token
 			ICalHandler.signin(returnURL);				
 			// **Look for answer in call back!
-		}		
+		}	
+		else
+		{
+		    // got token, go ahead with export
+		    ShowingRPC myShow = new ShowingRPC();
+            myShow.setMovieCode("WACK");
+            myShow.setMovieTitle("The Wackness");
+            myShow.setTheaterCode("UPTN");
+            ICalHandler.createEntry(myShow);
+		}
 	}
 	
 	/**
@@ -1003,9 +1012,10 @@ public class MySchedPane extends Sink implements ClickListener, ChangeListener,
 		
 		/**
 		 * Show the error message from server.
+		 * @param String actionID to identify server action.
 		 * @param String descriptive error text to display.
 		 */
-		public void onServerError(String inError)
+		public void onServerError(String actionID, String inError)
 		{
 			sysErrors.setHTML(inError);
 			waitCount--;
@@ -1055,9 +1065,10 @@ public class MySchedPane extends Sink implements ClickListener, ChangeListener,
         
         /**
          * Show the error message from server.
+         * @param String actionID to identify server action.
          * @param String descriptive error text to display.
          */
-        public void onServerError(String inError)
+        public void onServerError(String actionID, String inError)
         {
             sysErrors.setHTML(inError);
             waitCount--;
@@ -1115,9 +1126,10 @@ public class MySchedPane extends Sink implements ClickListener, ChangeListener,
 		
 		/**
 		 * Show the error message from server.
+		 * @param String actionID to identify server action.
 		 * @param String descriptive error text to display.
 		 */
-		public void onServerError(String inError)
+		public void onServerError(String actionID, String inError)
 		{
 			sysErrors.setHTML(inError);
 			waitCount--;
@@ -1165,9 +1177,10 @@ public class MySchedPane extends Sink implements ClickListener, ChangeListener,
 
 		/**
 		 * Show the error message from server.
+		 * @param String actionID to identify server action.
 		 * @param String descriptive error text to display.
 		 */
-		public void onServerError(String inError)
+		public void onServerError(String actionID, String inError)
 		{
 			sysErrors.setHTML(inError);
 			waitCount--;
@@ -1217,17 +1230,17 @@ public class MySchedPane extends Sink implements ClickListener, ChangeListener,
 				// fill fields in Appt
 				myAppt.clear();
 				myAppt.setApptID(inItem.getShowingID());
-				myAppt.setLocationText(inItem.getTheaterID());
+				myAppt.setLocationText(inItem.getTheaterCode());
 				myAppt.setLongName(inItem.getMovieTitle());
 				// TODO figure out if reading from db to get notes or removing notes
 				//myAppt.setNotesText(inName);
 				myAppt.setRunningMin(inItem.getRunningMin());
-				myAppt.setShortName(inItem.getMovieID());
+				myAppt.setShortName(inItem.getMovieCode());
 				myAppt.setStartDate(inItem.getStartDate());
 				myAppt.setStartDayIndex(inItem.getDayIndex());
 				myAppt.setStartTime(inItem.getStartTime());
 				myAppt.setStartTimeIndex(inItem.getTimeIndex());
-				myAppt.setUserID(User.getUserName());
+				myAppt.setUserID(User.getUserNum());
 				
 				// calc ending time (and indices for drop down)
 				UtilTimeRPC utilTime = new UtilTimeRPC();
@@ -1250,9 +1263,9 @@ public class MySchedPane extends Sink implements ClickListener, ChangeListener,
 				
 				// fill fields on panel
 				pickApptDay.setSelectedDayIndex(inItem.getDayIndex());
-				tbApptShort.setText(inItem.getMovieID());
+				tbApptShort.setText(inItem.getMovieCode());
 				tbApptLong.setText(inItem.getMovieTitle());
-				tbApptLocation.setText(inItem.getTheaterID());
+				tbApptLocation.setText(inItem.getTheaterCode());
 				tbApptNotes.setText("");
 				// TODO figure out if reading from db to get notes or removing notes
 				
@@ -1269,7 +1282,7 @@ public class MySchedPane extends Sink implements ClickListener, ChangeListener,
 			else
 			{
 				// found film, set ID to view detail and send them to film list
-				MovieHandler.setFilmDetailID(inItem.getMovieID());
+				MovieHandler.setFilmDetailID(inItem.getMovieCode());
 				History.newItem("Films");
 			}
 		}
@@ -1365,9 +1378,10 @@ public class MySchedPane extends Sink implements ClickListener, ChangeListener,
 
 		/**
 		 * Show the error message from server.
+		 * @param String actionID to identify server action.
 		 * @param String descriptive error text to display.
 		 */
-		public void onServerError(String inError)
+		public void onServerError(String actionID, String inError)
 		{
 			sysErrors.setHTML(inError);
 			goButton.setEnabled(false);
