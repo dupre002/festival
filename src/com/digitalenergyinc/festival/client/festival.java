@@ -1,5 +1,6 @@
 package com.digitalenergyinc.festival.client;
 
+import com.digitalenergyinc.festival.client.Sink.SinkInfo;
 import com.digitalenergyinc.festival.client.view.HomePane;
 import com.digitalenergyinc.festival.client.view.LogoutPane;
 import com.digitalenergyinc.festival.client.view.MoviePane;
@@ -7,12 +8,10 @@ import com.digitalenergyinc.festival.client.view.MyOptPane;
 import com.digitalenergyinc.festival.client.view.MySchedPane;
 import com.digitalenergyinc.festival.client.view.ReservePane;
 import com.digitalenergyinc.festival.client.view.SchedPane;
-import com.digitalenergyinc.festival.client.Sink;
-import com.digitalenergyinc.festival.client.SinkList;
-import com.digitalenergyinc.festival.client.Sink.SinkInfo;
 import com.google.gwt.core.client.EntryPoint;
+import com.google.gwt.event.logical.shared.ValueChangeEvent;
+import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.user.client.History;
-import com.google.gwt.user.client.HistoryListener;
 import com.google.gwt.user.client.ui.DockPanel;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HasAlignment;
@@ -31,7 +30,7 @@ import com.google.gwt.user.client.ui.VerticalPanel;
  * @author Rene Dupre
  * @version 1.0
  */ 
-public class festival implements EntryPoint, HistoryListener
+public class festival implements EntryPoint
 {
     protected SinkList list = new SinkList();   // menu list
     private SinkInfo curInfo;                   // currently info on selected menu item 
@@ -97,8 +96,23 @@ public class festival implements EntryPoint, HistoryListener
         panel.setCellHorizontalAlignment(list, HasAlignment.ALIGN_LEFT);
         panel.setCellWidth(vp, "100%");
         panel.setWidth("100%");
+        
+        // Setup a history handler 
+        final ValueChangeHandler<String> historyHandler = new ValueChangeHandler<String>() {
+            public void onValueChange(ValueChangeEvent<String> event) {
+             // Find the SinkInfo associated with the history context. If one is
+                // found, show it (It may not be found, for example, when the user mis-
+                // types a URL, or on startup, when the first context will be "").
+                SinkInfo info = list.find(event.getValue());
+                if (info == null) {
+                    showHome();
+                    return;
+                }
+                show(info, false);
+            }
+          };
+        History.addValueChangeHandler(historyHandler);
 
-        History.addHistoryListener(this);
         RootPanel.get().add(panel);
 
         // Show the initial screen.
