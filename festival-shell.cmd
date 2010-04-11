@@ -1,1 +1,1 @@
-@java -cp "%~dp0\src;%~dp0\bin;C:/java/gwt-windows-1.4.61/gwt-user.jar;C:/java/gwt-windows-1.4.61/gwt-dev-windows.jar" com.google.gwt.dev.GWTShell -out "%~dp0\www" %* com.digitalenergyinc.festival.festival/festival.html
+@java -cp "%~dp0\src;%~dp0\bin;C:/java/gwt-windows-1.6.4/gwt-user.jar;C:/java/gwt-windows-1.6.4/gwt-dev-windows.jar" com.google.gwt.dev.GWTShell -startupUrl festival.html com.digitalenergyinc.festival.festival

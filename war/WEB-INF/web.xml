@@ -25,7 +25,7 @@
     <load-on-startup>3</load-on-startup>
   </servlet>  
 
-  <!--my RPC servlets-->
+  <!--my RPC servlets -->
   <servlet>
     <servlet-name>RPCCommonService</servlet-name>
     <servlet-class>com.digitalenergyinc.fest.server.RPCCommonServiceImpl</servlet-class>
@@ -46,10 +46,11 @@
     <servlet-name>HTTPProxy</servlet-name>
     <url-pattern>/HTTPProxy</url-pattern>
   </servlet-mapping>
+  
 	
 	  <!-- The Welcome File List -->
   <welcome-file-list>
-    <welcome-file>index.html</welcome-file>
+    <welcome-file>festival.html</welcome-file>
   </welcome-file-list>
 
   <!--my filters that cache .CACHE files to improve performance -->
