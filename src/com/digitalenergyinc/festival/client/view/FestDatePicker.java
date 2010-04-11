@@ -7,9 +7,9 @@ import java.util.Vector;
 import com.digitalenergyinc.fest.client.Constants;
 import com.digitalenergyinc.fest.client.DataChangeListener;
 import com.digitalenergyinc.fest.client.model.ShowingRPC;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.i18n.client.DateTimeFormat;
-import com.google.gwt.user.client.ui.ChangeListener;
-import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Image;
@@ -30,8 +30,7 @@ import com.google.gwt.widgetideas.datepicker.client.DatePicker;
  * @author Rene Dupre
  * @version 1.0
  */ 
-public class FestDatePicker extends Composite implements ClickListener, 
-ChangeListener
+public class FestDatePicker extends Composite implements ClickHandler, ChangeHandler
 {
     private HorizontalPanel mainHP = 
         new HorizontalPanel();         // Main panel for this widget
@@ -142,13 +141,13 @@ ChangeListener
         // make drop down list and set initial value
         lbDate.setVisibleItemCount(1);
         lbDate.setSelectedIndex(selectedDayIndex);
-        lbDate.addChangeListener(this);
+        //lbDate.addChangeListener(this);
         
         // set up date picker icon
         pickerPic.setStyleName("film_Image");
         pickerPic.setUrl(pickerURL);
         pickerPic.setTitle("Select date from calendar");
-        pickerPic.addClickListener(this);        
+        pickerPic.addClickHandler(this);        
         
         // add it to the panel
         mainHP.add(lbDate);
@@ -180,10 +179,11 @@ ChangeListener
     
     /**
      * Handles when controls are clicked.
-     * @param Widget the incoming widget clicked.
+     * @param event the incoming object that was clicked.
      */
-    public void onClick(Widget sender)
+    public void onClick(ClickEvent event)
     {
+        Widget sender = (Widget) event.getSource();
         // look if date picker icon clicked
         if (sender == pickerPic)
         {
@@ -212,8 +212,9 @@ ChangeListener
      * Handles when date picker is clicked.
      * @param Widget the incoming button clicked.
      */
-    public void onChange(Widget sender)
+    public void onChange(ChangeEvent event)
     {
+        Widget sender = (Widget) event.getSource();
         // if date is changed in list box, save result, reset datepicker default
         if (sender == lbDate)
         {

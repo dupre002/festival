@@ -12,12 +12,13 @@ import com.digitalenergyinc.fest.client.model.ShowingRPC;
 import com.digitalenergyinc.fest.client.model.TheaterGroup;
 import com.digitalenergyinc.fest.client.model.UtilTimeRPC;
 import com.digitalenergyinc.festival.client.Sink;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.DeferredCommand;
 import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.IncrementalCommand;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Button;
-import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.Grid;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HorizontalPanel;
@@ -25,11 +26,10 @@ import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.user.client.ui.RootPanel;
-import com.google.gwt.user.client.ui.SourcesTableEvents;
-import com.google.gwt.user.client.ui.TableListener;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
+import com.google.gwt.user.client.ui.HTMLTable.Cell;
 import com.google.gwt.widgetideas.client.GlassPanel;
 import com.google.gwt.widgetideas.client.ProgressBar;
 
@@ -43,8 +43,7 @@ import com.google.gwt.widgetideas.client.ProgressBar;
  * @author Rene Dupre
  * @version 1.0
  */ 
-public class ReservePane extends Sink implements ClickListener, TableListener,
-			LogoutListener
+public class ReservePane extends Sink implements ClickHandler, LogoutListener
 {
 	private VerticalPanel mainVP = 
 		new VerticalPanel();  				// main panel
@@ -203,7 +202,7 @@ public class ReservePane extends Sink implements ClickListener, TableListener,
 		
 		buyAllButton.setStyleName("film-Button");
 		buyAllButton.setTitle("Buy tickets for all shows at one time.");
-		buyAllButton.addClickListener(this);
+		buyAllButton.addClickHandler(this);
 		buyAllButton.setEnabled(false);
 		
 		Grid tixTable = new Grid(3,2);
@@ -243,7 +242,7 @@ public class ReservePane extends Sink implements ClickListener, TableListener,
 		reschedButton.addStyleName("film-Errors");
 		reschedButton.setTitle("Click to reschedule due to sold out showings.");
 		reschedButton.setEnabled(false);
-		reschedButton.addClickListener(this);
+		reschedButton.addClickHandler(this);
 		
 		reschedMsg.setStyleName("film-Errors");
 		
@@ -288,7 +287,7 @@ public class ReservePane extends Sink implements ClickListener, TableListener,
 		helpIcon = new Image(helpURL);     
         helpIcon.setTitle("Click here to see help for this screen.");
         helpIcon.setStyleName("film-Button2");
-        helpIcon.addClickListener(this);
+        helpIcon.addClickHandler(this);
         titleHP.add(helpIcon);
         listVP.add(titleHP);
 		
@@ -324,7 +323,7 @@ public class ReservePane extends Sink implements ClickListener, TableListener,
 		filmGrid = new Grid(filmList.length, COL_COUNT);
 		filmGrid.setStyleName("sched-Film-Font");
 		filmGrid.setWidth("100%");
-		filmGrid.addTableListener(this);
+		filmGrid.addClickHandler(this);
 		filmGrid.getColumnFormatter().setWidth(COL_TITLE, "250px");
 		filmGrid.getColumnFormatter().setWidth(COL_ID, "70px");
 		filmGrid.getColumnFormatter().setWidth(COL_DATETIME, "160px");
@@ -886,12 +885,11 @@ public class ReservePane extends Sink implements ClickListener, TableListener,
 
 	/**
 	 * Listen for clicking on cells in table.
-	 * @param SourcesTableEvents the event capturing the click.
 	 * @param int row number clicked.
 	 * @param int col number clicked.
 	 */
-	public void onCellClicked(SourcesTableEvents inEvent,
-			int row, int col) {
+	public void onCellClicked(int row, int col) 
+	{
 
 		// check which column is clicked and only take action on certain columns
 		if ((col != COL_ID) && (col != COL_BUTTON) && (col != COL_SELLOUT))
@@ -996,10 +994,11 @@ public class ReservePane extends Sink implements ClickListener, TableListener,
 	  
 	/**
 	 * Handles when controls are clicked.
-	 * @param Widget the incoming widget clicked.
-	 */
-	public void onClick(Widget sender)
+	 * @param ClickEvent the incoming object that was clicked.
+     */
+    public void onClick(ClickEvent event)
 	{
+	    Widget sender = (Widget) event.getSource();
 		// check which button is pressed
 	    if (sender == helpIcon)
         {
@@ -1023,6 +1022,14 @@ public class ReservePane extends Sink implements ClickListener, TableListener,
 			setupProgress();
             ScheduleHandler.schedPrep();
             // when prep is done, schedListener is called   
+		}
+		else if (sender == filmGrid)
+		{
+		    // get cell detail
+            Cell mycell = filmGrid.getCellForEvent(event);
+            int row = mycell.getRowIndex();
+            int col = mycell.getCellIndex();
+            onCellClicked(row, col);
 		}
 	}
 	  

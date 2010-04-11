@@ -2,8 +2,9 @@ package com.digitalenergyinc.festival.client.view;
 
 import com.digitalenergyinc.festival.client.SideMenu;
 import com.digitalenergyinc.festival.client.Sink;
+import com.google.gwt.event.logical.shared.ValueChangeEvent;
+import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.user.client.History;
-import com.google.gwt.user.client.HistoryListener;
 import com.google.gwt.user.client.ui.DockPanel;
 
 /**
@@ -16,7 +17,7 @@ import com.google.gwt.user.client.ui.DockPanel;
  * @author Rene Dupre
  * @version 1.0
  */ 
-public class HomePane extends Sink implements HistoryListener {
+public class HomePane extends Sink  {
 
 	protected SideMenu list = new SideMenu();   // menu list
 	private SinkInfo curInfo;					// currently info on selected menu item 
@@ -35,23 +36,6 @@ public class HomePane extends Sink implements HistoryListener {
       }
     };
   }
-  
-  /**
-   * Determines what to show when history has changed.
-   * @param String history token to display.
-   */
-  public void onHistoryChanged(String token) 
-  {
-	  // Find the SinkInfo associated with the history context. If one is
-	  // found, show it (It may not be found, for example, when the user mis-
-	  // types a URL, or on startup, when the first context will be "").
-	  SinkInfo info = list.find(token);
-	  if (info == null) {
-		  showWelcome();
-		  return;
-	  }
-	  show(info, false);
-  }
 	
   /**
 	* This is the long description for the main window of this panel.
@@ -68,7 +52,21 @@ public class HomePane extends Sink implements HistoryListener {
 
 	  initWidget(menuContainer);
 	  
-	  History.addHistoryListener(this);
+	// Setup a history handler to reselect the associate menu item
+	  final ValueChangeHandler<String> historyHandler = new ValueChangeHandler<String>() {
+	      public void onValueChange(ValueChangeEvent<String> event) {
+	       // Find the SinkInfo associated with the history context. If one is
+	          // found, show it (It may not be found, for example, when the user mis-
+	          // types a URL, or on startup, when the first context will be "").
+	          SinkInfo info = list.find(event.getValue());
+	          if (info == null) {
+	              showWelcome();
+	              return;
+	          }
+	          show(info, false);
+	      }
+	    };
+	  History.addValueChangeHandler(historyHandler);
 	  
 	  showWelcome();
   }

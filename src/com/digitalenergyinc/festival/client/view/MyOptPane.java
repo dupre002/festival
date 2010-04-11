@@ -10,14 +10,15 @@ import com.digitalenergyinc.fest.client.control.User;
 import com.digitalenergyinc.fest.client.model.ShowingRPC;
 import com.digitalenergyinc.fest.client.model.UtilTimeRPC;
 import com.digitalenergyinc.festival.client.Sink;
+import com.google.gwt.event.dom.client.ChangeHandler;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.DeferredCommand;
 import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.IncrementalCommand;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Button;
-import com.google.gwt.user.client.ui.ChangeListener;
 import com.google.gwt.user.client.ui.CheckBox;
-import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.Grid;
 import com.google.gwt.user.client.ui.HTML;
@@ -42,7 +43,7 @@ import com.google.gwt.widgetideas.client.ProgressBar;
  * @author Rene Dupre
  * @version 1.0
  */ 
-public class MyOptPane extends Sink implements ClickListener, ChangeListener,
+public class MyOptPane extends Sink implements ClickHandler, ChangeHandler,
 	LogoutListener
 		
 {
@@ -163,7 +164,7 @@ public class MyOptPane extends Sink implements ClickListener, ChangeListener,
 	    helpIcon = new Image(helpURL);     
         helpIcon.setTitle("Click here to see help for this screen.");
         helpIcon.setStyleName("film-Button2");
-        helpIcon.addClickListener(this);
+        helpIcon.addClickHandler(this);
         sysPanel.add(helpIcon);
         
 		// wait icon
@@ -181,18 +182,18 @@ public class MyOptPane extends Sink implements ClickListener, ChangeListener,
 		// buttons
 		schedButton.setTitle("Create your schedule.");
 		schedButton.setEnabled(false);  
-		schedButton.addClickListener(this);	
+		schedButton.addClickHandler(this);	
 		
 		saveButton.setTitle("Save your scheduling options.");
 		saveButton.setStyleName("film-Button");
 		saveButton.setEnabled(false);  
-		saveButton.addClickListener(this);			
+		saveButton.addClickHandler(this);			
 		buttonHP.add(saveButton);
 		
 		cancelButton.setTitle("Cancel changes your scheduling options.");
 		cancelButton.setStyleName("film-Button");
 		cancelButton.setEnabled(false);  
-		cancelButton.addClickListener(this);			
+		cancelButton.addClickHandler(this);			
 		buttonHP.add(cancelButton);
 		buttonHP.setStyleName("opt-Boxed");
 		buttonHP.setHorizontalAlignment(VerticalPanel.ALIGN_LEFT);
@@ -246,13 +247,13 @@ public class MyOptPane extends Sink implements ClickListener, ChangeListener,
 		
 		if (SchedPolicyHandler.isRedEyeMovieOK())
 		{
-			rbRedEyeYes.setChecked(true);
-			rbRedEyeNo.setChecked(false);
+			rbRedEyeYes.setValue(true);
+			rbRedEyeNo.setValue(false);
 		}
 		else
 		{
-			rbRedEyeYes.setChecked(false);
-			rbRedEyeNo.setChecked(true);
+			rbRedEyeYes.setValue(false);
+			rbRedEyeNo.setValue(true);
 		}
 
         int tempMin = (SchedPolicyHandler.getMealMinutes() / 30) - 1;
@@ -267,16 +268,16 @@ public class MyOptPane extends Sink implements ClickListener, ChangeListener,
         
 		if (SchedPolicyHandler.isHaveMealBreak())
 		{
-			rbMealYes.setChecked(true);
-			rbMealNo.setChecked(false);
+			rbMealYes.setValue(true);
+			rbMealNo.setValue(false);
 			lbMealStart.setEnabled(true);
 			lbMealEnd.setEnabled(true);
 			lbMealMin.setEnabled(true);
 		}
 		else
 		{
-			rbMealYes.setChecked(false);
-			rbMealNo.setChecked(true);
+			rbMealYes.setValue(false);
+			rbMealNo.setValue(true);
 			lbMealStart.setEnabled(false);
 			lbMealEnd.setEnabled(false);
 			lbMealMin.setEnabled(false);
@@ -376,8 +377,8 @@ public class MyOptPane extends Sink implements ClickListener, ChangeListener,
 		lbEndTime.setSelectedIndex(32);
 		
 		// set up listener
-		lbStartTime.addChangeListener(this);
-		lbEndTime.addChangeListener(this);
+		lbStartTime.addChangeHandler(this);
+		lbEndTime.addChangeHandler(this);
 		
 		// load in panels
 		Grid gTime = new Grid(2, 3);
@@ -415,7 +416,7 @@ public class MyOptPane extends Sink implements ClickListener, ChangeListener,
 		lbFilms.setSelectedIndex(5);
 		
 		// set up listener
-		lbFilms.addChangeListener(this);
+		lbFilms.addChangeHandler(this);
 		
 		// load in panels
 		Grid gFilms = new Grid(1, 3);
@@ -433,7 +434,7 @@ public class MyOptPane extends Sink implements ClickListener, ChangeListener,
 		HTML hdgRed1 = new HTML("Allow an early film to be scheduled after a late film?");
 	    
 	    // Check 'yes' by default.
-		rbRedEyeYes.setChecked(true);
+		rbRedEyeYes.setValue(true);
 		rbRedEyeYes.setTitle("Yes, schedule an early morning film after a late show the previous night");
 		rbRedEyeNo.setTitle("No, do not schedule an early morning film after a late show the previous night");
 	    hdgRed.setStyleName("sched-Film-Font");
@@ -442,8 +443,8 @@ public class MyOptPane extends Sink implements ClickListener, ChangeListener,
 	    rbRedEyeNo.setStyleName("sched-Film-Font");
 	    
 	    // set listeners
-	    rbRedEyeYes.addClickListener(this);
-	    rbRedEyeNo.addClickListener(this);
+	    rbRedEyeYes.addClickHandler(this);
+	    rbRedEyeNo.addClickHandler(this);
 	    
 	    // load in panels
 	    Grid  gRedEye = new Grid (1,4);
@@ -482,7 +483,7 @@ public class MyOptPane extends Sink implements ClickListener, ChangeListener,
 		lbBetween.setSelectedIndex(0);
 		
 		// set up listener
-		lbBetween.addChangeListener(this);
+		lbBetween.addChangeHandler(this);
 		
 		// load in panels
 		Grid gBtwn = new Grid(1, 3);
@@ -503,7 +504,7 @@ public class MyOptPane extends Sink implements ClickListener, ChangeListener,
 		HTML hdgMealEnd = new HTML("and:");
 	    
 	    // set formatting.
-		rbMealYes.setChecked(true);
+		rbMealYes.setValue(true);
 		rbMealYes.setTitle("Yes, Build in a meal break each day");
 		rbMealNo.setTitle("No, do not schedule any time for a meal break");
 	    lbMealMin.setTitle("Leave at least this amount of time for a meal"+
@@ -553,11 +554,11 @@ public class MyOptPane extends Sink implements ClickListener, ChangeListener,
 		lbMealEnd.setSelectedIndex(26);
 		
 		// set up listener
-		lbMealMin.addChangeListener(this);
-		lbMealStart.addChangeListener(this);
-		lbMealEnd.addChangeListener(this);
-	    rbMealYes.addClickListener(this);
-	    rbMealNo.addClickListener(this);
+		lbMealMin.addChangeHandler(this);
+		lbMealStart.addChangeHandler(this);
+		lbMealEnd.addChangeHandler(this);
+	    rbMealYes.addClickHandler(this);
+	    rbMealNo.addClickHandler(this);
 		
 	    // load in panels
 	    FlexTable  gMeal = new FlexTable();
@@ -607,7 +608,7 @@ public class MyOptPane extends Sink implements ClickListener, ChangeListener,
 		lbTix.setSelectedIndex(0);
 		
 		// set up listener
-		lbTix.addChangeListener(this);
+		lbTix.addChangeHandler(this);
 		
 		// load in panels
 		Grid gTix = new Grid(1, 3);
@@ -633,16 +634,16 @@ public class MyOptPane extends Sink implements ClickListener, ChangeListener,
 		hdgTheater1.setStyleName("sched-Film-Font");
 		
 		// set initial value
-		cbPC.setChecked(false);
-		cbSLC.setChecked(false);
-		cbSV.setChecked(false);
-		cbOG.setChecked(false);
+		cbPC.setValue(false);
+		cbSLC.setValue(false);
+		cbSV.setValue(false);
+		cbOG.setValue(false);
 		
 		// set up listener
-		cbPC.addClickListener(this);
-		cbSLC.addClickListener(this);
-		cbSV.addClickListener(this);
-		cbOG.addClickListener(this);
+		cbPC.addClickHandler(this);
+		cbSLC.addClickHandler(this);
+		cbSV.addClickHandler(this);
+		cbOG.addClickHandler(this);
 		
 		// load in panels
 		Grid gTheaters = new Grid(4, 3);
@@ -800,10 +801,11 @@ public class MyOptPane extends Sink implements ClickListener, ChangeListener,
     
 	/**
 	 * Handles when filters are clicked.
-	 * @param Widget the incoming button clicked.
-	 */
-	public void onClick(Widget sender)
+	 * @param ClickEvent the incoming object that was clicked.
+     */
+    public void onClick(ClickEvent event)
 	{
+        Widget sender = (Widget) event.getSource();
 		// check which button is pressed
 	    if (sender == helpIcon)
         {
@@ -889,10 +891,11 @@ public class MyOptPane extends Sink implements ClickListener, ChangeListener,
 
 	/**
 	 * Handles when start or pause button is clicked.
-	 * @param Widget the incoming button clicked.
-	 */
-	public void onChange(Widget sender)
-	{
+	 * @param ChangeEvent the incoming event.
+     */
+    public void onChange(com.google.gwt.event.dom.client.ChangeEvent event)
+    {
+        Widget sender = (Widget) event.getSource();
 		if (sender == lbStartTime)
 		{
 			String tempTime = lbStartTime.getItemText(lbStartTime.getSelectedIndex());
@@ -1029,16 +1032,16 @@ public class MyOptPane extends Sink implements ClickListener, ChangeListener,
 	{
 		// convert check boxes for theaters to a bitmap
 		int theaters = 0;
-		if (cbPC.isChecked())
+		if (cbPC.getValue())
 			theaters = theaters | Constants.THEATER_PC;
 
-		if (cbSLC.isChecked())
+		if (cbSLC.getValue())
 			theaters = theaters | Constants.THEATER_SLC;
 
-		if (cbSV.isChecked())
+		if (cbSV.getValue())
 			theaters = theaters | Constants.THEATER_SV;
 
-		if (cbOG.isChecked())
+		if (cbOG.getValue())
 			theaters = theaters | Constants.THEATER_OG;
 
 		SchedPolicyHandler.setTheaterMap(theaters);
@@ -1056,27 +1059,27 @@ public class MyOptPane extends Sink implements ClickListener, ChangeListener,
 		// based on incoming bit map, set the appropriate check boxes
 		int trialMask = theaterOption & Constants.THEATER_PC;
 		if (trialMask == Constants.THEATER_PC)
-			cbPC.setChecked(true);
+			cbPC.setValue(true);
 		else
-			cbPC.setChecked(false);
+			cbPC.setValue(false);
 
 		trialMask = theaterOption & Constants.THEATER_SLC;
 		if (trialMask == Constants.THEATER_SLC)
-			cbSLC.setChecked(true);
+			cbSLC.setValue(true);
 		else
-			cbSLC.setChecked(false);
+			cbSLC.setValue(false);
 
 		trialMask = theaterOption & Constants.THEATER_SV;
 		if (trialMask == Constants.THEATER_SV)
-			cbSV.setChecked(true);
+			cbSV.setValue(true);
 		else
-			cbSV.setChecked(false);
+			cbSV.setValue(false);
 
 		trialMask = theaterOption & Constants.THEATER_OG;
 		if (trialMask == Constants.THEATER_OG)
-			cbOG.setChecked(true);
+			cbOG.setValue(true);
 		else
-			cbOG.setChecked(false);
+			cbOG.setValue(false);
 	}
 	
 

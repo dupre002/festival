@@ -11,8 +11,9 @@ import com.digitalenergyinc.fest.client.control.User;
 import com.digitalenergyinc.fest.client.model.UtilTimeRPC;
 import com.digitalenergyinc.fest.client.widget.DaySchedWidget;
 import com.digitalenergyinc.festival.client.Sink;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.ui.CheckBox;
-import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Grid;
 import com.google.gwt.user.client.ui.HTML;
@@ -32,7 +33,7 @@ import com.google.gwt.user.client.ui.Widget;
  * @author Rene Dupre
  * @version 1.0
  */ 
-public class SchedPane extends Sink implements ClickListener, LogoutListener
+public class SchedPane extends Sink implements ClickHandler, LogoutListener
 {
 	private VerticalPanel mainVP = 
 		new VerticalPanel();  				// main panel
@@ -106,7 +107,7 @@ public class SchedPane extends Sink implements ClickListener, LogoutListener
         helpIcon = new Image(helpURL);     
         helpIcon.setTitle("Click here to see help for this screen.");
         helpIcon.setStyleName("film-Button2");
-        helpIcon.addClickListener(this);
+        helpIcon.addClickHandler(this);
         dayPanel.add(helpIcon);
         
 		dayHdg = new HTML("", true); 
@@ -115,10 +116,10 @@ public class SchedPane extends Sink implements ClickListener, LogoutListener
 		// set up day heading with scroll buttons and display options
 		nextDay = new Image(nextURL);		
 		nextDay.setTitle("Click to go to next day");
-		nextDay.addClickListener(this);
+		nextDay.addClickHandler(this);
 		prevDay = new Image(prevURL);	
 		prevDay.setTitle("Click to go to previous day");	
-		prevDay.addClickListener(this);
+		prevDay.addClickHandler(this);
 		dayPanel.add(prevDay);
 		dayPanel.add(nextDay);
 		dayHdg.setHTML(utilTime.convertIndexToLongDay(dayShown));
@@ -139,7 +140,7 @@ public class SchedPane extends Sink implements ClickListener, LogoutListener
 		// sold out filter
 		soldOutFilter = new CheckBox("Hide Sold Out");
 		soldOutFilter.setTitle("If checked, will hide showings that have no tickets");
-		soldOutFilter.addClickListener(this);
+		soldOutFilter.addClickHandler(this);
 		optPanel.add(soldOutFilter);
 		
 		mainScroll.setWidth("100%");
@@ -222,13 +223,13 @@ public class SchedPane extends Sink implements ClickListener, LogoutListener
 			tFilter.setTitle("Check this box to see the films at these theaters");
 			tFilter.setName(gID);
 			boolean isShown = TheaterHandler.showGroup(gID);
-			tFilter.setChecked(isShown);
-			tFilter.addClickListener(this);
+			tFilter.setValue(isShown);
+			tFilter.addClickHandler(this);
 			theaterFlow.add(tFilter);
 
 			// go thru all theaters and add to panel
 			HashSet myList = (HashSet)TheaterHandler.getTheaterGroups().get(gID);
-			Iterator iT = myList.iterator();		
+			Iterator<String> iT = myList.iterator();		
 			while (iT.hasNext())
 			{
 				String tID = (String)iT.next();
@@ -260,10 +261,11 @@ public class SchedPane extends Sink implements ClickListener, LogoutListener
 	
 	/**
 	 * Handles when filters are clicked.
-	 * @param Widget the incoming button clicked.
-	 */
-	public void onClick(Widget sender)
+	 * @param ClickEvent the incoming object that was clicked.
+     */
+    public void onClick(ClickEvent event)
 	{		
+	    Widget sender = (Widget) event.getSource();
 	    // check which button is pressed
         if (sender == helpIcon)
         {
@@ -272,18 +274,18 @@ public class SchedPane extends Sink implements ClickListener, LogoutListener
         }
         else if (sender == soldOutFilter)
 		{
-			boolean checked = ((CheckBox) sender).isChecked();
+			boolean checked = ((CheckBox) sender).getValue();
 			if (checked)
 			{
 				// go thru all groups to get to theaters
-				Iterator i = TheaterHandler.getTheaterGroupIDs().iterator();		
+				Iterator<String> i = TheaterHandler.getTheaterGroupIDs().iterator();		
 				while (i.hasNext())
 				{
 					String gID = (String)i.next();
 					
 					// go thru all theaters and hide all sold out showings
 					HashSet myList = (HashSet)TheaterHandler.getTheaterGroups().get(gID);
-					Iterator iT = myList.iterator();		
+					Iterator<String> iT = myList.iterator();		
 					while (iT.hasNext())
 					{
 						String tID = (String)iT.next();
@@ -296,14 +298,14 @@ public class SchedPane extends Sink implements ClickListener, LogoutListener
 			else
 			{
 				// go thru all groups to get to theaters
-				Iterator i = TheaterHandler.getTheaterGroupIDs().iterator();		
+				Iterator<String> i = TheaterHandler.getTheaterGroupIDs().iterator();		
 				while (i.hasNext())
 				{
 					String gID = (String)i.next();
 					
 					// go thru all theaters and show all sold out showings
 					HashSet myList = (HashSet)TheaterHandler.getTheaterGroups().get(gID);
-					Iterator iT = myList.iterator();		
+					Iterator<String> iT = myList.iterator();		
 					while (iT.hasNext())
 					{
 						String tID = (String)iT.next();
@@ -329,7 +331,7 @@ public class SchedPane extends Sink implements ClickListener, LogoutListener
 					
 					// go thru all theaters and switch visible to next day
 					HashSet myList = (HashSet)TheaterHandler.getTheaterGroups().get(gID);
-					Iterator iT = myList.iterator();		
+					Iterator<String> iT = myList.iterator();		
 					while (iT.hasNext())
 					{
 						String tID = (String)iT.next();
@@ -361,7 +363,7 @@ public class SchedPane extends Sink implements ClickListener, LogoutListener
 					
 					// go thru all theaters and switch visible to next day
 					HashSet myList = (HashSet)TheaterHandler.getTheaterGroups().get(gID);
-					Iterator iT = myList.iterator();		
+					Iterator<String> iT = myList.iterator();		
 					while (iT.hasNext())
 					{
 						String tID = (String)iT.next();
@@ -380,7 +382,7 @@ public class SchedPane extends Sink implements ClickListener, LogoutListener
 		{
 			// show/hide individual theater
 			String keyID = ((CheckBox)sender).getName();
-			boolean tChecked = ((CheckBox)sender).isChecked();
+			boolean tChecked = ((CheckBox)sender).getValue();
 			int widCount = mainHP.getWidgetCount();
 			for (int loopCtr=0; loopCtr<widCount; loopCtr++)
 			{
@@ -397,7 +399,7 @@ public class SchedPane extends Sink implements ClickListener, LogoutListener
 							tSched.hideDay();
 						
 						// hide sold if checked
-						if (soldOutFilter.isChecked())
+						if (soldOutFilter.getValue())
 							tSched.hideSoldout();						
 						
 						break;
@@ -409,7 +411,7 @@ public class SchedPane extends Sink implements ClickListener, LogoutListener
 		{
 			// show/hide group of theaters
 			String groupID = ((CheckBox)sender).getName();
-			boolean tChecked = ((CheckBox)sender).isChecked();			
+			boolean tChecked = ((CheckBox)sender).getValue();			
 			
 			// cycle thru all widgets and see if it is selected group
 			int widCount = mainHP.getWidgetCount();
@@ -428,7 +430,7 @@ public class SchedPane extends Sink implements ClickListener, LogoutListener
 							tSched.hideDay();
 						
 						// hide sold if checked
-						if (soldOutFilter.isChecked())
+						if (soldOutFilter.getValue())
 							tSched.hideSoldout();	
 					}
 				}

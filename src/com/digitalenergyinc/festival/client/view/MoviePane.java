@@ -13,24 +13,29 @@ import com.digitalenergyinc.fest.client.model.ShowingRPC;
 import com.digitalenergyinc.fest.client.model.TheaterGroup;
 import com.digitalenergyinc.fest.client.model.UtilTimeRPC;
 import com.digitalenergyinc.festival.client.Sink;
+import com.google.gwt.event.dom.client.ChangeHandler;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.MouseOutEvent;
+import com.google.gwt.event.dom.client.MouseOutHandler;
+import com.google.gwt.event.dom.client.MouseOverEvent;
+import com.google.gwt.event.dom.client.MouseOverHandler;
+import com.google.gwt.event.dom.client.MouseUpEvent;
+import com.google.gwt.event.dom.client.MouseUpHandler;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.DeferredCommand;
 import com.google.gwt.user.client.IncrementalCommand;
 import com.google.gwt.user.client.ui.Button;
-import com.google.gwt.user.client.ui.ChangeListener;
-import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.Grid;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.ListBox;
-import com.google.gwt.user.client.ui.MouseListener;
 import com.google.gwt.user.client.ui.RadioButton;
-import com.google.gwt.user.client.ui.SourcesTableEvents;
-import com.google.gwt.user.client.ui.TableListener;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
+import com.google.gwt.user.client.ui.HTMLTable.Cell;
 
 /**
  * This is the set of panels to manage the user's schedule options.
@@ -42,8 +47,8 @@ import com.google.gwt.user.client.ui.Widget;
  * @author Rene Dupre
  * @version 1.0
  */ 
-public class MoviePane extends Sink implements ClickListener, TableListener, 
-ChangeListener, MouseListener
+public class MoviePane extends Sink implements ClickHandler, MouseUpHandler,
+MouseOverHandler, MouseOutHandler, ChangeHandler
 {
 	private VerticalPanel mainVP = 
 		new VerticalPanel();  				// main panel
@@ -177,7 +182,7 @@ ChangeListener, MouseListener
 		helpIcon = new Image(helpURL);     
 		helpIcon.setTitle("Click here to see help for this screen.");
 		helpIcon.setStyleName("film-Button2");
-		helpIcon.addClickListener(this);
+		helpIcon.addClickHandler(this);
 		sysPanel.add(helpIcon);
 		waitPanel.add(waitIcon);
 		waitPanel.add(waitText);
@@ -197,9 +202,9 @@ ChangeListener, MouseListener
 		listNav.setTitle("Return to Film List");
 		filmPic.setStyleName("film_Image");
 
-		nextFilm.addClickListener(this);
-		prevFilm.addClickListener(this);
-		listNav.addClickListener(this);
+		nextFilm.addClickHandler(this);
+		prevFilm.addClickHandler(this);
+		listNav.addClickHandler(this);
 
 		detailControlsHP.add(listNav);
 		detailControlsHP.add(prevFilm);
@@ -216,7 +221,7 @@ ChangeListener, MouseListener
 		lbPerPage.addItem("50");
 		lbPerPage.setVisibleItemCount(1);
 		lbPerPage.setSelectedIndex(0);        
-		lbPerPage.addChangeListener(this);
+		lbPerPage.addChangeHandler(this); 
 		
 		perPagePanel.setStyleName("film-PerPage");
 		perPagePanel.addStyleName("film-SpacerRight");
@@ -248,9 +253,9 @@ ChangeListener, MouseListener
         pagePrev.setStyleName("film-Button2");
         pageNext.setStyleName("film-Button2");
         pageFirst.setStyleName("film-Button2");
-        pagePrev.addClickListener(this);
-        pageNext.addClickListener(this);
-        pageFirst.addClickListener(this);
+        pagePrev.addClickHandler(this);
+        pageNext.addClickHandler(this);
+        pageFirst.addClickHandler(this);
         pagePrev.setEnabled(false);
         pageFirst.setEnabled(false);
         listVP.add(pagingPanel);
@@ -270,7 +275,7 @@ ChangeListener, MouseListener
 		
 
 		colLabel.getColumnFormatter().setStyleName(selectedSort, "film-List-selected");
-		colLabel.addTableListener(this);
+		colLabel.addClickHandler(this);
 		listVP.add(colLabel);
 		listVP.setVisible(false);	
 		//listVP.setStyleName("opt-Boxed");
@@ -337,7 +342,7 @@ ChangeListener, MouseListener
         // default to first row as selected and set listener for clicks
         selectedIndex = 0;  
         filmGrid.getRowFormatter().setStyleName(selectedIndex, "film-List-selected");   
-        filmGrid.addTableListener(this);
+        filmGrid.addClickHandler(this);
         movieIDDisplayed = "";
 
         listVP.add(filmGrid);
@@ -537,20 +542,20 @@ ChangeListener, MouseListener
 
 		if (autoNext)
 		{
-			rbAutoYes.setChecked(true);
-			rbAutoNo.setChecked(false);
+			rbAutoYes.setValue(true);
+			rbAutoNo.setValue(false);
 		}
 		else
 		{
-			rbAutoYes.setChecked(false);
-			rbAutoNo.setChecked(true);
+			rbAutoYes.setValue(false);
+			rbAutoNo.setValue(true);
 		}
 		rbAutoYes.setTitle("Yes, Automatically advance to next film");
 		rbAutoYes.setStyleName("sched-Film-Font");
-		rbAutoYes.addClickListener(this);
+		rbAutoYes.addClickHandler(this);
 		rbAutoNo.setTitle("No, Do not automatically advance to next film");
 		rbAutoNo.setStyleName("sched-Film-Font");
-		rbAutoNo.addClickListener(this);
+		rbAutoNo.addClickHandler(this);
 		myAutoNextHP.add(rbAutoYes);
 		myAutoNextHP.add(rbAutoNo);
 		myAutoNextHP.add(autoHdg2);
@@ -563,11 +568,21 @@ ChangeListener, MouseListener
 		else
 		    myRanking.setVisible(true);
 
-		myRank1.addMouseListener(this);
-		myRank2.addMouseListener(this);
-		myRank3.addMouseListener(this);
-		myRank4.addMouseListener(this);
-		myRank5.addMouseListener(this);
+		myRank1.addMouseUpHandler(this);
+		myRank2.addMouseUpHandler(this);
+		myRank3.addMouseUpHandler(this);
+		myRank4.addMouseUpHandler(this);
+		myRank5.addMouseUpHandler(this);
+		myRank1.addMouseOverHandler(this);
+        myRank2.addMouseOverHandler(this);
+        myRank3.addMouseOverHandler(this);
+        myRank4.addMouseOverHandler(this);
+        myRank5.addMouseOverHandler(this);
+        myRank1.addMouseOutHandler(this);
+        myRank2.addMouseOutHandler(this);
+        myRank3.addMouseOutHandler(this);
+        myRank4.addMouseOutHandler(this);
+        myRank5.addMouseOutHandler(this);
 
 		int theRank = MovieHandler.getFilmRank(myFilm.getMovieID());
 		curState = theRank;
@@ -1040,36 +1055,12 @@ ChangeListener, MouseListener
     }
 
 	/**
-	 * Listen for clicking on cells in player table.
-	 * @param SourcesTableEvents the event capturing the click.
-	 * @param int row number clicked.
-	 * @param int col number clicked.
-	 */
-	public void onCellClicked(SourcesTableEvents inEvent,
-			int row, int col) {
-
-		if (inEvent.equals(colLabel))
-		{
-			//System.out.println("is column header!");
-			showWait("Sorting...");	
-			newSort = col;
-			DeferredCommand.addCommand(new Command() { public void execute() {
-				changeSortOrder(newSort); }});
-		}
-		else
-		{
-			//System.out.println("is NOT column header!");
-			changeFilmSelection(row);
-			showFilmDetail();
-		}
-	} 
-
-	/**
 	 * Handles when controls are clicked.
-	 * @param Widget the incoming widget clicked.
-	 */
-	public void onClick(Widget sender)
+	 * @param event the incoming object that was clicked.
+     */
+    public void onClick(ClickEvent event)
 	{
+        Widget sender = (Widget) event.getSource();
 		// check which button is pressed
 	    if (sender == helpIcon)
         {
@@ -1120,14 +1111,34 @@ ChangeListener, MouseListener
 		    requestedRow = 0;
             refreshList();
         }
+	    // check for table clicks
+		else if (sender == colLabel)
+        {
+		    Cell mycell = colLabel.getCellForEvent(event);
+            int col = mycell.getCellIndex();
+            //System.out.println("is column header!");
+            showWait("Sorting..."); 
+            newSort = col;
+            DeferredCommand.addCommand(new Command() { public void execute() {
+                changeSortOrder(newSort); }});
+        }
+        else if (sender == filmGrid)
+        {
+            Cell mycell = filmGrid.getCellForEvent(event);
+            int row = mycell.getRowIndex();
+            //System.out.println("is NOT column header!");
+            changeFilmSelection(row);
+            showFilmDetail();
+        }
 	}
 	
 	/**
      * Handles when the films per page is clicked.
-     * @param Widget the incoming button clicked.
+     * @param ChangeEvent the incoming event.
      */
-    public void onChange(Widget sender)
+    public void onChange(com.google.gwt.event.dom.client.ChangeEvent event)
     {
+        Widget sender = (Widget) event.getSource();
         if (sender == lbPerPage)
         {
             // set films per page
@@ -1154,10 +1165,11 @@ ChangeListener, MouseListener
 
 	/**
 	 * Listen for mouse entering the star ranking widget.
-	 * @param Widget the offending widget.
+	 * @param MouseOverEvent the offending mouse event.
 	 */
-	public void onMouseEnter(Widget sender) 
+	public void onMouseOver(MouseOverEvent event) 
 	{
+	    Widget sender = (Widget) event.getSource();
 		//System.out.println("Mouse Enter"+curState+" "+curRank);
 		//  find how many stars we should highlight (which star they hover over)
 		int desiredState = 0;		
@@ -1182,9 +1194,9 @@ ChangeListener, MouseListener
 	/**
 	 * Listen for mouse leaving the star ranking widget which will restore
 	 * the stars showing to the original number turned on.
-	 * @param Widget the offending widget.
+	 * @param MouseOutEvent the offending mouse event.
 	 */
-	public void onMouseLeave(Widget sender) 
+	public void onMouseOut(MouseOutEvent event) 
 	{
 		//System.out.println("Mouse Leave "+curState+" "+curRank);
 		// restore the state to the original rank (if it has changed)
@@ -1197,12 +1209,11 @@ ChangeListener, MouseListener
 
 	/**
 	 * Listen for mouse up click the star ranking widget which means user is updating rank.
-	 * @param Widget the offending widget.
-	 * @param int xCoord the x coordinate when mouse went up.
-	 * @param int yCoord the y coordinate when mouse went up.
+	 * @param MouseUpEvent the offending mouse event.
 	 */
-	public void onMouseUp(Widget sender, int xCoord, int yCoord) 
+	public void onMouseUp(MouseUpEvent event) 
 	{
+	    Widget sender = (Widget) event.getSource();
 		// if film is ranked for the first time, increment number of films ranked
 		if (freshlyRanked == true)
 		{
@@ -1325,28 +1336,6 @@ ChangeListener, MouseListener
 			if (autoNext)
 				gotoNextFilm();
 		}  
-	} 
-
-	/**
-	 * Listen for mouse down click the widget.
-	 * @param Widget the offending widget.
-	 * @param int xCoord the x coordinate when mouse went down.
-	 * @param int yCoord the y coordinate when mouse went down.
-	 */
-	public void onMouseDown(Widget sender, int xCoord, int yCoord) 
-	{
-
-	} 
-
-	/**
-	 * Listen for mouse moving the widget.
-	 * @param Widget the offending widget.
-	 * @param int xCoord the x coordinate when mouse moved.
-	 * @param int yCoord the y coordinate when mouse moved.
-	 */
-	public void onMouseMove(Widget sender, int xCoord, int yCoord) 
-	{
-
 	} 
 
 	/**

@@ -20,13 +20,14 @@ import com.digitalenergyinc.fest.client.model.ShowingRPC;
 import com.digitalenergyinc.fest.client.model.UtilTimeRPC;
 import com.digitalenergyinc.fest.client.widget.MySchedWidget;
 import com.digitalenergyinc.festival.client.Sink;
+import com.google.gwt.event.dom.client.ChangeHandler;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.DeferredCommand;
 import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.IncrementalCommand;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Button;
-import com.google.gwt.user.client.ui.ChangeListener;
-import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.Frame;
 import com.google.gwt.user.client.ui.Grid;
@@ -54,7 +55,7 @@ import com.google.gwt.widgetideas.client.ProgressBar;
  * @author Rene Dupre
  * @version 1.0 
  */ 
-public class MySchedPane extends Sink implements ClickListener, ChangeListener,
+public class MySchedPane extends Sink implements ClickHandler, ChangeHandler,
 		LogoutListener
 {
 	private VerticalPanel mainVP = 
@@ -216,7 +217,7 @@ public class MySchedPane extends Sink implements ClickListener, ChangeListener,
 		reschedButton.addStyleName("film-Errors");
 		reschedButton.setTitle("Click to create your schedule based on My Options.");
 		//reschedButton.setEnabled(false);
-		reschedButton.addClickListener(this);
+		reschedButton.addClickHandler(this);
 		
 		
 		reschedMsg.setStyleName("film-Errors");
@@ -239,18 +240,18 @@ public class MySchedPane extends Sink implements ClickListener, ChangeListener,
 		// title pane
 		apptButton.setStyleName("film-Button");
 		apptButton.setTitle("Click to create a personal appointment.");
-		apptButton.addClickListener(this);
+		apptButton.addClickHandler(this);
 		
 		exportButton.setStyleName("film-Button");
 		exportButton.setTitle("Click to export your schedule to a Google calendar.");
-		exportButton.addClickListener(this);
+		exportButton.addClickHandler(this);
 		
 		screenTitle = new HTML("<b>My Schedule</b>");	
 		titleHP.add(screenTitle);
 		helpIcon = new Image(helpURL);     
         helpIcon.setTitle("Click here to see help for this screen.");
         helpIcon.setStyleName("film-Button2");
-        helpIcon.addClickListener(this);
+        helpIcon.addClickHandler(this);
         titleHP.add(helpIcon);
 		titleHP.setHorizontalAlignment(HorizontalPanel.ALIGN_RIGHT);
 		titleHP.add(apptButton);
@@ -468,12 +469,12 @@ public class MySchedPane extends Sink implements ClickListener, ChangeListener,
 		lbEndTime.setSelectedIndex(32);
 		
 		// set up listeners
-		tbApptShort.addChangeListener(this);
-		tbApptLong.addChangeListener(this);
-		lbStartTime.addChangeListener(this);
-		lbEndTime.addChangeListener(this);
-		tbApptLocation.addChangeListener(this);
-		tbApptNotes.addChangeListener(this);
+		tbApptShort.addChangeHandler(this);
+		tbApptLong.addChangeHandler(this);
+		lbStartTime.addChangeHandler(this);
+		lbEndTime.addChangeHandler(this);
+		tbApptLocation.addChangeHandler(this);
+		tbApptNotes.addChangeHandler(this);
 
 		
 	    // load in panels
@@ -505,7 +506,7 @@ public class MySchedPane extends Sink implements ClickListener, ChangeListener,
 	    helpApptIcon = new Image(helpURL);     
 	    helpApptIcon.setTitle("Click here to see help for this screen.");
 	    helpApptIcon.setStyleName("film-Button2");
-	    helpApptIcon.addClickListener(this);
+	    helpApptIcon.addClickHandler(this);
         
 	    apptTitleHP.add(hdgAppt);
 	    apptTitleHP.add(helpApptIcon);
@@ -517,20 +518,20 @@ public class MySchedPane extends Sink implements ClickListener, ChangeListener,
 		saveButton.setTitle("Save your appointment.");
 		saveButton.setStyleName("film-Button");
 		saveButton.setEnabled(false);  
-		saveButton.addClickListener(this);			
+		saveButton.addClickHandler(this);			
 		buttonHP.add(saveButton);
 		
 		cancelButton.setTitle("Cancel appointment.");
 		cancelButton.setStyleName("film-Button");
 		cancelButton.setEnabled(true);  
-		cancelButton.addClickListener(this);			
+		cancelButton.addClickHandler(this);			
 		buttonHP.add(cancelButton);
 		
 		deleteButton.setTitle("Delete appointment.");
 		deleteButton.setStyleName("film-Button");
 		deleteButton.setEnabled(true);  
 		deleteButton.setVisible(false);		// only show if editing
-		deleteButton.addClickListener(this);			
+		deleteButton.addClickHandler(this);			
 		buttonHP.add(deleteButton);
 		
 		buttonHP.setStyleName("opt-Boxed");
@@ -572,13 +573,13 @@ public class MySchedPane extends Sink implements ClickListener, ChangeListener,
 		goButton.setTitle("Continue with Export");
 		goButton.setStyleName("film-Button");
 		goButton.setEnabled(true);  
-		goButton.addClickListener(this);			
+		goButton.addClickHandler(this);			
 		expButtonHP.add(goButton);
 		
 		noGoButton.setTitle("Cancel export");
 		noGoButton.setStyleName("film-Button");
 		noGoButton.setEnabled(true);  
-		noGoButton.addClickListener(this);			
+		noGoButton.addClickHandler(this);			
 		expButtonHP.add(noGoButton);
 		
 		expButtonHP.setHorizontalAlignment(VerticalPanel.ALIGN_LEFT);
@@ -748,10 +749,11 @@ public class MySchedPane extends Sink implements ClickListener, ChangeListener,
     
 	/**
 	 * Handles when buttons are clicked.
-	 * @param Widget the incoming button clicked.
-	 */
-	public void onClick(Widget sender)
-	{
+	 * @param ClickEvent the incoming object that was clicked.
+     */
+    public void onClick(ClickEvent event)
+    {
+        Widget sender = (Widget) event.getSource();
         // check which button is pressed
         if (sender == helpIcon)
         {
@@ -856,10 +858,11 @@ public class MySchedPane extends Sink implements ClickListener, ChangeListener,
 	
 	/**
 	 * Handles when fields or options are changed.
-	 * @param Widget the incoming widget changed.
-	 */
-	public void onChange(Widget sender)
-	{
+	 * @param ChangeEvent the incoming event.
+     */
+    public void onChange(com.google.gwt.event.dom.client.ChangeEvent event)
+    {
+        Widget sender = (Widget) event.getSource();
 		if (sender == tbApptShort)
 		{
 			//System.out.println("Index:"+tbApptShort.getText());
