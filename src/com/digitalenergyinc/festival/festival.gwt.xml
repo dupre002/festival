@@ -1,11 +1,10 @@
-<module>
+<module rename-to='festival'>
 
 	<!-- Inherit the core Web Toolkit stuff.                  -->
 	<inherits name='com.google.gwt.user.User'/>
 
     <!-- For common festival routines -->
 	<inherits name='com.digitalenergyinc.fest.festCommon'/>
-	<inherits name='com.digitalenergyinc.fest.festServer'/>
 	
 	<!-- For URL Token analyzer -->
 	<inherits name='org.gwtwidgets.WidgetLibrary'/>
