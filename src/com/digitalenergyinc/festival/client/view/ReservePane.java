@@ -12,15 +12,16 @@ import com.digitalenergyinc.fest.client.model.ShowingRPC;
 import com.digitalenergyinc.fest.client.model.TheaterGroup;
 import com.digitalenergyinc.fest.client.model.UtilTimeRPC;
 import com.digitalenergyinc.festival.client.Sink;
+import com.google.gwt.core.client.Scheduler;
+import com.google.gwt.core.client.Scheduler.RepeatingCommand;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.user.client.DeferredCommand;
 import com.google.gwt.user.client.History;
-import com.google.gwt.user.client.IncrementalCommand;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Grid;
 import com.google.gwt.user.client.ui.HTML;
+import com.google.gwt.user.client.ui.HTMLTable.Cell;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Label;
@@ -29,7 +30,6 @@ import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
-import com.google.gwt.user.client.ui.HTMLTable.Cell;
 import com.google.gwt.widgetideas.client.GlassPanel;
 import com.google.gwt.widgetideas.client.ProgressBar;
 
@@ -588,7 +588,7 @@ public class ReservePane extends Sink implements ClickHandler, LogoutListener
     private void reschedIncr()
     {       
         // do scheduling in pieces.
-        DeferredCommand.addCommand(new IncrementalCommand() {
+        Scheduler.get().scheduleIncremental(new RepeatingCommand() {
 
             protected int start = 0;
             
@@ -1061,7 +1061,7 @@ public class ReservePane extends Sink implements ClickHandler, LogoutListener
 	private void buyAllIncr(final ShowingRPC[] updShowings, final int inEnd) 
 	{
 	    // do loading of list in pieces.
-	    DeferredCommand.addCommand(new IncrementalCommand() {
+	    Scheduler.get().scheduleIncremental(new RepeatingCommand() {
 
 	        protected int index = 0;
             protected int end = inEnd;

@@ -16,9 +16,9 @@ import com.digitalenergyinc.fest.client.control.User;
 import com.digitalenergyinc.fest.client.model.ShowingRPC;
 import com.digitalenergyinc.fest.client.tickets.TicketPackageRPC;
 import com.digitalenergyinc.festival.client.Sink;
-import com.google.gwt.user.client.Command;
+import com.google.gwt.core.client.Scheduler;
+import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.user.client.Cookies;
-import com.google.gwt.user.client.DeferredCommand;
 import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HTML;
@@ -145,7 +145,7 @@ public class WelcomePane extends Sink
 			displayLoggedIn();
 		else
 			// set focus after all is done
-			DeferredCommand.addCommand(new Command() { public void execute() {
+		    Scheduler.get().scheduleDeferred(new ScheduledCommand() { public void execute() {
 				loginPanel.focus(); }});	
 	}
 
@@ -176,8 +176,10 @@ public class WelcomePane extends Sink
 		
 		summary1.setHTML("You have ranked " + SummaryHandler.getMoviesRanked()+" films");
 		summary1.setVisible(true);
+		summary1.setVisible(false);
 		summary2.setHTML("You have " + SummaryHandler.getMoviesUnranked()+" films unranked.");
 		summary2.setVisible(true);
+		summary2.setVisible(false);
 		int totalTix = SummaryHandler.getPremiereTixSched() + SummaryHandler.getRegularTixSched();
 		summary3.setHTML("You have " +totalTix+" films on your schedule.");
 		summary3.setVisible(true);
@@ -207,7 +209,7 @@ public class WelcomePane extends Sink
 			isBack = false;
 		}
 
-		DeferredCommand.addCommand(new Command() { public void execute() {
+		Scheduler.get().scheduleDeferred(new ScheduledCommand() { public void execute() {
 			loginPanel.focus(); }});	 
 	}
 

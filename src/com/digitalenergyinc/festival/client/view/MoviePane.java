@@ -13,6 +13,9 @@ import com.digitalenergyinc.fest.client.model.ShowingRPC;
 import com.digitalenergyinc.fest.client.model.TheaterGroup;
 import com.digitalenergyinc.fest.client.model.UtilTimeRPC;
 import com.digitalenergyinc.festival.client.Sink;
+import com.google.gwt.core.client.Scheduler;
+import com.google.gwt.core.client.Scheduler.RepeatingCommand;
+import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.event.dom.client.ChangeHandler;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -22,20 +25,17 @@ import com.google.gwt.event.dom.client.MouseOverEvent;
 import com.google.gwt.event.dom.client.MouseOverHandler;
 import com.google.gwt.event.dom.client.MouseUpEvent;
 import com.google.gwt.event.dom.client.MouseUpHandler;
-import com.google.gwt.user.client.Command;
-import com.google.gwt.user.client.DeferredCommand;
-import com.google.gwt.user.client.IncrementalCommand;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.Grid;
 import com.google.gwt.user.client.ui.HTML;
+import com.google.gwt.user.client.ui.HTMLTable.Cell;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.RadioButton;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
-import com.google.gwt.user.client.ui.HTMLTable.Cell;
 
 /**
  * This is the set of panels to manage the user's schedule options.
@@ -367,7 +367,7 @@ MouseOverHandler, MouseOutHandler, ChangeHandler
     private void loadListData(final int inStart, final int inEnd)
     {                       
         // do loading of list in pieces.
-        DeferredCommand.addCommand(new IncrementalCommand() {
+        Scheduler.get().scheduleIncremental(new RepeatingCommand() {
 
             protected int start = 0;
             protected int incr = 5;
@@ -1119,7 +1119,7 @@ MouseOverHandler, MouseOutHandler, ChangeHandler
             //System.out.println("is column header!");
             showWait("Sorting..."); 
             newSort = col;
-            DeferredCommand.addCommand(new Command() { public void execute() {
+            Scheduler.get().scheduleDeferred(new ScheduledCommand() { public void execute() {
                 changeSortOrder(newSort); }});
         }
         else if (sender == filmGrid)
