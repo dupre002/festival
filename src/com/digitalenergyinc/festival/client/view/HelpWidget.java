@@ -1,8 +1,9 @@
 package com.digitalenergyinc.festival.client.view;
 
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Button;
-import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.DialogBox;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HorizontalPanel;
@@ -10,7 +11,6 @@ import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.user.client.ui.ScrollPanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
-import com.google.gwt.user.client.ui.Widget;
 
 /**
  * This is the set of help panels.
@@ -72,8 +72,8 @@ public class HelpWidget
           // DialogBox is a SimplePanel, so you have to set its widget property to
           // whatever you want its contents to be.
           Button ok = new Button("OK");
-          ok.addClickListener(new ClickListener() {
-            public void onClick(Widget sender) {
+          ok.addClickHandler(new ClickHandler() {
+            public void onClick(ClickEvent sender) {
               MyDialog.this.hide();
             }
           });
@@ -136,8 +136,8 @@ public class HelpWidget
         Button closeButton = new Button("Close");
         closeButton.setStyleName("film-Button");
         closeButton.setTitle("Click to close Help window.");
-        closeButton.addClickListener(new ClickListener() {
-          public void onClick(Widget sender) {
+        closeButton.addClickHandler(new ClickHandler() {
+            public void onClick(ClickEvent sender) {
             // hide popup
               hideHelp();
           }
