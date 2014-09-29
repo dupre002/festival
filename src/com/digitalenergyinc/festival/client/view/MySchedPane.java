@@ -8,6 +8,7 @@ import org.gwtwidgets.client.util.WindowUtils;
 import com.digitalenergyinc.fest.client.Constants;
 import com.digitalenergyinc.fest.client.DataChangeListener;
 import com.digitalenergyinc.fest.client.LogoutListener;
+import com.digitalenergyinc.fest.client.RPCCommonController;
 import com.digitalenergyinc.fest.client.ServerListener;
 import com.digitalenergyinc.fest.client.control.ApptHandler;
 import com.digitalenergyinc.fest.client.control.ICalHandler;
@@ -20,13 +21,14 @@ import com.digitalenergyinc.fest.client.model.ShowingRPC;
 import com.digitalenergyinc.fest.client.model.UtilTimeRPC;
 import com.digitalenergyinc.fest.client.widget.MySchedWidget;
 import com.digitalenergyinc.festival.client.Sink;
+import com.google.gwt.core.client.Scheduler;
+import com.google.gwt.core.client.Scheduler.RepeatingCommand;
 import com.google.gwt.event.dom.client.ChangeHandler;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.user.client.DeferredCommand;
 import com.google.gwt.user.client.History;
-import com.google.gwt.user.client.IncrementalCommand;
 import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.Frame;
@@ -279,6 +281,7 @@ public class MySchedPane extends Sink implements ClickHandler, ChangeHandler,
 		mainVP.addStyleName("film-Boxed");
 				
 		// set up listeners
+		writeToServerLog("set up listeners");
 		schedHandler = ScheduleHandler.instance();
 		ScheduleHandler.addServerListener(new loadSchedlistener());
 		ScheduleHandler.addSchedListener(new schedlistener());
@@ -295,6 +298,7 @@ public class MySchedPane extends Sink implements ClickHandler, ChangeHandler,
 	 */
 	private void setupGuide()
 	{		
+	    writeToServerLog("setupGuide");
 		// set up hour headings
 		int slotCount = 36;
 		hourTbl = new Grid(slotCount, 1);
@@ -351,11 +355,13 @@ public class MySchedPane extends Sink implements ClickHandler, ChangeHandler,
 		// set up each day in schedule for a user (if not created already)
 		if (!ScheduleHandler.isLoaded())
 		{
+		    writeToServerLog("sched not loaded");
 			ScheduleHandler.loadMySchedule(true);
 		}
 		else
 		{
 			// already loaded, so make sure display is updated
+		    writeToServerLog("sched loaded, refresh display");
 			ServerListener x = new loadSchedlistener();
 			x.onServerEnd(null, null);
 		}
@@ -712,7 +718,7 @@ public class MySchedPane extends Sink implements ClickHandler, ChangeHandler,
 	private void reschedIncr()
 	{       
 	    // do scheduling in pieces.
-        DeferredCommand.addCommand(new IncrementalCommand() {
+	    Scheduler.get().scheduleIncremental(new RepeatingCommand() {
 
             protected int start = 0;
             
@@ -1010,7 +1016,9 @@ public class MySchedPane extends Sink implements ClickHandler, ChangeHandler,
 		 */
 		public void onServerEnd(String actionID, Object result)
 		{
+		    writeToServerLog("loadSchedlistener/onServerEnd");
 		    recreateGuide();
+		    sysErrors.setHTML("");
 		}
 		
 		/**
@@ -1020,6 +1028,7 @@ public class MySchedPane extends Sink implements ClickHandler, ChangeHandler,
 		 */
 		public void onServerError(String actionID, String inError)
 		{
+		    writeToServerLog("loadSchedlistener/onServerError "+inError);
 			sysErrors.setHTML(inError);
 			waitCount--;
 			if (waitCount <= 0)
@@ -1041,6 +1050,7 @@ public class MySchedPane extends Sink implements ClickHandler, ChangeHandler,
          */
         public void onServerStart(String inDescr)
         {
+            writeToServerLog("SchedListener:OnServerStart");
             showWait(inDescr);
             waitCount++;
         }
@@ -1052,6 +1062,8 @@ public class MySchedPane extends Sink implements ClickHandler, ChangeHandler,
          */
         public void onServerEnd(String actionID, Object result)
         {
+            writeToServerLog("SchedListener:OnServerEnd");
+            sysErrors.setHTML("");
             // called after schedule data is loaded            
             if (actionID.equalsIgnoreCase("PREP"))
             {
@@ -1369,7 +1381,7 @@ public class MySchedPane extends Sink implements ClickHandler, ChangeHandler,
 			
 			// get resulting Token from server
 			authURL = (String) result;
-			System.out.println("authToken="+authURL);
+			writeToServerLog("authToken="+authURL);
 			expDescr1.setHTML("Found token: "+authURL);  
 			//String tempStr = "<a href="+authURL+">Authorize</a>";
 			//icalLink.setHTML(tempStr);
@@ -1442,4 +1454,26 @@ public class MySchedPane extends Sink implements ClickHandler, ChangeHandler,
 		else if (isLoaded == false)
 			setupGuide();
 	}
+	
+	/**
+     * Writes string to server log
+     * @param inLog String incoming string to write.
+     */
+    private static void writeToServerLog(String inLog)
+    {
+        // write to sys out, then to server log
+        System.out.println("MySchedPane:"+inLog);
+        inLog = "MySchedPane:" + inLog;
+        
+        RPCCommonController.getInstance().serverLog("DEBUG",
+                inLog, 
+                new AsyncCallback<Void>()
+        {
+            public void onFailure(Throwable caught) {
+                System.out.println("error on callback! "+caught.getMessage());
+            }
+            public void onSuccess(Void result) {
+            }
+        } );
+    }
 }
