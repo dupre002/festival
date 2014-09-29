@@ -3,6 +3,7 @@ package com.digitalenergyinc.festival.client.view;
 import com.digitalenergyinc.fest.client.Constants;
 import com.digitalenergyinc.fest.client.DataChangeListener;
 import com.digitalenergyinc.fest.client.LogoutListener;
+import com.digitalenergyinc.fest.client.RPCCommonController;
 import com.digitalenergyinc.fest.client.ServerListener;
 import com.digitalenergyinc.fest.client.control.SchedPolicyHandler;
 import com.digitalenergyinc.fest.client.control.ScheduleHandler;
@@ -10,13 +11,14 @@ import com.digitalenergyinc.fest.client.control.User;
 import com.digitalenergyinc.fest.client.model.ShowingRPC;
 import com.digitalenergyinc.fest.client.model.UtilTimeRPC;
 import com.digitalenergyinc.festival.client.Sink;
+import com.google.gwt.core.client.Scheduler;
+import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.event.dom.client.ChangeHandler;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.user.client.DeferredCommand;
 import com.google.gwt.user.client.History;
-import com.google.gwt.user.client.IncrementalCommand;
 import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.CheckBox;
 import com.google.gwt.user.client.ui.FlexTable;
@@ -206,7 +208,11 @@ public class MyOptPane extends Sink implements ClickHandler, ChangeHandler,
 		//mainHP.addStyleName("film-Boxed");
 		mainOptVP.setStyleName("film-Sink");
 		mainOptVP.addStyleName("film-Boxed");
-
+		writeToServerLog("opt1: create");
+		
+		initWidget(mainOptVP);
+		setupOptions();
+		
 		// set up listener
 		User.addLogoutListener(this);
 		SchedPolicyHandler.addServerListener(new myServerlistener());
@@ -215,6 +221,7 @@ public class MyOptPane extends Sink implements ClickHandler, ChangeHandler,
 		ScheduleHandler schedHandler = ScheduleHandler.instance();
 		ScheduleHandler.addServerListener(new loadSchedlistener());
         ScheduleHandler.addSchedListener(new schedlistener());
+
         if (!ScheduleHandler.isLoaded())
         {
             ScheduleHandler.loadMySchedule(true);
@@ -224,8 +231,8 @@ public class MyOptPane extends Sink implements ClickHandler, ChangeHandler,
             schedButton.setEnabled(true);
         }
 		
-		initWidget(mainOptVP);
-		setupOptions();
+		//initWidget(mainOptVP);
+        SchedPolicyHandler.loadPolicy();		
 	}	  
 	
 	/**
@@ -257,7 +264,7 @@ public class MyOptPane extends Sink implements ClickHandler, ChangeHandler,
 		}
 
         int tempMin = (SchedPolicyHandler.getMealMinutes() / 30) - 1;
-        //System.out.println("tempMin "+tempMin+" mealMin "+SchedPolicy.getMealMinutes());
+        //writeToServerLog("tempMin "+tempMin+" mealMin "+SchedPolicy.getMealMinutes());
         lbMealMin.setSelectedIndex(tempMin);
         
         timeIndex = utilTime.convertTimeToIndex8(SchedPolicyHandler.getStartMealTime());
@@ -286,7 +293,7 @@ public class MyOptPane extends Sink implements ClickHandler, ChangeHandler,
 	    lbTix.setSelectedIndex(SchedPolicyHandler.getTicketsRequested() - 1);
 	    
 	    tempMin = (SchedPolicyHandler.getBetweenMinutes() / 5);
-		//System.out.println("between "+tempMin+" mealMin "+SchedPolicy.getBetweenMinutes());
+		//writeToServerLog("between "+tempMin+" mealMin "+SchedPolicy.getBetweenMinutes());
 		lbBetween.setSelectedIndex(tempMin);
 
 		if (SchedPolicyHandler.getMoviesPerDay() == 0)
@@ -335,7 +342,7 @@ public class MyOptPane extends Sink implements ClickHandler, ChangeHandler,
 		
 		daysVP.setStyleName("opt-Boxed");
 		daysVP.add(gDays);
-		
+
 		
 		// *******************************
 		// set up start and end time panel
@@ -673,7 +680,7 @@ public class MyOptPane extends Sink implements ClickHandler, ChangeHandler,
 		rightVP.setStyleName("opt-OuterBox");
 		
 		mainOptHP.add(leftVP);
-		mainOptHP.add(rightVP);		
+		mainOptHP.add(rightVP);	
 	}
 
 	/**
@@ -764,7 +771,7 @@ public class MyOptPane extends Sink implements ClickHandler, ChangeHandler,
     private void reschedIncr()
     {       
         // do scheduling in pieces.
-        DeferredCommand.addCommand(new IncrementalCommand() {
+        Scheduler.get().scheduleDeferred(new ScheduledCommand() {
 
             protected int start = 0;
             
@@ -772,10 +779,10 @@ public class MyOptPane extends Sink implements ClickHandler, ChangeHandler,
              * (non-Javadoc)
              * @see com.google.gwt.user.client.IncrementalCommand#execute()
              */
-            public boolean execute() 
+            public void execute() 
             {                
-                //System.out.println("incoming "+inStart+" to "+inEnd+" max:"+max);
-                //System.out.println("displaying "+start+" to "+end+" rqst: "+rqstRow);
+                //writeToServerLog("incoming "+inStart+" to "+inEnd+" max:"+max);
+                //writeToServerLog("displaying "+start+" to "+end+" rqst: "+rqstRow);
                 // call handler to create schedule
                 ScheduleHandler.rescheduleIncr();
 
@@ -784,7 +791,6 @@ public class MyOptPane extends Sink implements ClickHandler, ChangeHandler,
                 {
                     // finish up
                     totalBar.setProgress(100);
-                    return false;    // no more to do!
                     // saving will result in loadSchedListener being called
                 }
 
@@ -792,9 +798,6 @@ public class MyOptPane extends Sink implements ClickHandler, ChangeHandler,
                 stepDescr.setHTML(ScheduleHandler.getStepDescr());
                 methodBar.setProgress(ScheduleHandler.getPctComplete());
                 totalBar.setProgress(ScheduleHandler.getPctCompleteOverall());
-                
-                // more to do!
-                return true;
             }
         });                       
     }
@@ -845,13 +848,13 @@ public class MyOptPane extends Sink implements ClickHandler, ChangeHandler,
 		{
 		    SchedPolicyHandler.setRedEyeMovieOK(true);
 			setOptChanged();
-			//System.out.println("red eye Yes");
+			//writeToServerLog("red eye Yes");
 		}	
 		else if (sender == rbRedEyeNo)
 		{
 		    SchedPolicyHandler.setRedEyeMovieOK(false);
 			setOptChanged();
-			//System.out.println("red eye No");
+			//writeToServerLog("red eye No");
 		}	
 		else if (sender == rbMealYes)
 		{
@@ -860,7 +863,7 @@ public class MyOptPane extends Sink implements ClickHandler, ChangeHandler,
 			lbMealStart.setEnabled(true);
 			lbMealEnd.setEnabled(true);
 			lbMealMin.setEnabled(true);
-			//System.out.println("meal Yes");
+			//writeToServerLog("meal Yes");
 		}	
 		else if (sender == rbMealNo)
 		{
@@ -869,7 +872,7 @@ public class MyOptPane extends Sink implements ClickHandler, ChangeHandler,
 			lbMealStart.setEnabled(false);
 			lbMealEnd.setEnabled(false);
 			lbMealMin.setEnabled(false);
-			//System.out.println("Meal No");
+			//writeToServerLog("Meal No");
 		}	
 		else if (sender == cbPC)
 		{
@@ -910,7 +913,7 @@ public class MyOptPane extends Sink implements ClickHandler, ChangeHandler,
 			{
 				strTime = tempTime.substring(0, 5) + ":00";
 			}
-			//System.out.println("Time:"+strTime);
+			//writeToServerLog("Time:"+strTime);
 			SchedPolicyHandler.setFirstMovieTime(strTime);
 			setOptChanged();
 			
@@ -934,7 +937,7 @@ public class MyOptPane extends Sink implements ClickHandler, ChangeHandler,
 			{
 				strTime = tempTime.substring(0, 5) + ":00";
 			}
-			//System.out.println("Time:"+strTime);
+			//writeToServerLog("Time:"+strTime);
 			SchedPolicyHandler.setLastMovieTime(strTime);
 			setOptChanged();
 			
@@ -950,21 +953,21 @@ public class MyOptPane extends Sink implements ClickHandler, ChangeHandler,
 			// if max of 6, use zero to indicate no limit
 			if (tempFilms == 6)
 				tempFilms = 0;
-			//System.out.println("Films:"+tempFilms);
+			//writeToServerLog("Films:"+tempFilms);
 			SchedPolicyHandler.setMoviesPerDay(tempFilms);
 			setOptChanged();
 		}
 		else if (sender == lbBetween)
 		{
 			int tempMin = 5 * lbBetween.getSelectedIndex();
-			//System.out.println("BtwnMin:"+tempMin);
+			//writeToServerLog("BtwnMin:"+tempMin);
 			SchedPolicyHandler.setBetweenMinutes(tempMin);
 			setOptChanged();
 		}	
 		else if (sender == lbMealMin)
 		{
 			int tempMin = 30 + (30* lbMealMin.getSelectedIndex());
-			//System.out.println("MealMin:"+tempMin);
+			//writeToServerLog("MealMin:"+tempMin);
 			SchedPolicyHandler.setMealMinutes(tempMin);
 			setOptChanged();
 		}	
@@ -982,7 +985,7 @@ public class MyOptPane extends Sink implements ClickHandler, ChangeHandler,
 			{
 				strTime = tempTime.substring(0, 5) + ":00";
 			}
-			//System.out.println("Time:"+strTime);
+			//writeToServerLog("Time:"+strTime);
 			SchedPolicyHandler.setStartMealTime(strTime);
 			setOptChanged();
 			
@@ -1006,7 +1009,7 @@ public class MyOptPane extends Sink implements ClickHandler, ChangeHandler,
 			{
 				strTime = tempTime.substring(0, 5) + ":00";
 			}
-			//System.out.println("Time:"+strTime);
+			//writeToServerLog("Time:"+strTime);
 			SchedPolicyHandler.setEndMealTime(strTime);
 			setOptChanged();
 			
@@ -1021,7 +1024,7 @@ public class MyOptPane extends Sink implements ClickHandler, ChangeHandler,
 			int tempTix = lbTix.getSelectedIndex()+1;
 			SchedPolicyHandler.setTicketsRequested(tempTix);
 			setOptChanged();
-			//System.out.println("Tix:"+tempTix);
+			//writeToServerLog("Tix:"+tempTix);
 		}	
 	}
 
@@ -1046,7 +1049,7 @@ public class MyOptPane extends Sink implements ClickHandler, ChangeHandler,
 
 		SchedPolicyHandler.setTheaterMap(theaters);
 		setOptChanged();
-		//System.out.println("theaterMap:"+cbPC.isChecked()+" "+cbSLC.isChecked()+
+		//writeToServerLog("theaterMap:"+cbPC.isChecked()+" "+cbSLC.isChecked()+
 		//		" "+cbSV.isChecked()+" "+cbOG.isChecked()+" "+theaters);
 	}
 
@@ -1142,7 +1145,7 @@ public class MyOptPane extends Sink implements ClickHandler, ChangeHandler,
             // change start date
             SchedPolicyHandler.setFirstMovieIndex(pickStart.getSelectedDayIndex());
             setOptChanged();
-            //System.out.println("Index:"+pickStart.getSelectedDayIndex());
+            //writeToServerLog("Index:"+pickStart.getSelectedDayIndex());
         }
 
         /**
@@ -1350,4 +1353,26 @@ public class MyOptPane extends Sink implements ClickHandler, ChangeHandler,
 			loadOptions();
 		}
 	}
+	
+	/**
+     * Writes string to server log
+     * @param inLog String incoming string to write.
+     */
+    private static void writeToServerLog(String inLog)
+    {
+        // write to sys out, then to server log
+        System.out.println("MyOptPane:"+inLog);
+        inLog = "MyOptPane:" + inLog;
+        
+        RPCCommonController.getInstance().serverLog("DEBUG",
+                inLog, 
+                new AsyncCallback<Void>()
+        {
+            public void onFailure(Throwable caught) {
+                System.out.println("error on callback! "+caught.getMessage());
+            }
+            public void onSuccess(Void result) {
+            }
+        } );
+    }
 }
