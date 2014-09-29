@@ -15,7 +15,7 @@
 		type="javax.sql.DataSource" 
 		description="movie Database"/>
 		-->
-	<Resource name="jdbc/movie" auth="Container"
+	<Resource name="jdbc/multifest" auth="Container"
 		type="javax.sql.DataSource" 
 		factory="org.apache.tomcat.dbcp.dbcp.BasicDataSourceFactory"
 		maxActive="8" maxIdle="4"

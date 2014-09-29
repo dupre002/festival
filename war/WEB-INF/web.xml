@@ -77,7 +77,7 @@
 	  <description>Resource reference to a factory for java.sql.Connection
     instances that may be used for talking to a particular
     database that is configured in the context.xml file.</description>
-      <res-ref-name>jdbc/movie</res-ref-name>
+      <res-ref-name>jdbc/multifest</res-ref-name>
       <res-type>javax.sql.DataSource</res-type>
       <res-auth>Container</res-auth>
 	  <res-sharing-scope>Shareable</res-sharing-scope>
