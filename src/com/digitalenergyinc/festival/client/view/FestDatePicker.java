@@ -7,8 +7,12 @@ import java.util.Vector;
 import com.digitalenergyinc.fest.client.Constants;
 import com.digitalenergyinc.fest.client.DataChangeListener;
 import com.digitalenergyinc.fest.client.model.ShowingRPC;
+import com.google.gwt.event.dom.client.ChangeEvent;
+import com.google.gwt.event.dom.client.ChangeHandler;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.logical.shared.ValueChangeEvent;
+import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HorizontalPanel;
@@ -16,9 +20,9 @@ import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.user.client.ui.Widget;
-import com.google.gwt.widgetideas.client.event.ChangeEvent;
-import com.google.gwt.widgetideas.client.event.ChangeHandler;
-import com.google.gwt.widgetideas.datepicker.client.DatePicker;
+import com.google.gwt.user.datepicker.client.DatePicker;
+
+
 
 /**
  * This is a widget that combines a list box and date picker for festival dates.
@@ -30,7 +34,7 @@ import com.google.gwt.widgetideas.datepicker.client.DatePicker;
  * @author Rene Dupre
  * @version 1.0
  */ 
-public class FestDatePicker extends Composite implements ClickHandler, ChangeHandler
+public class FestDatePicker extends Composite implements ClickHandler
 {
     private HorizontalPanel mainHP = 
         new HorizontalPanel();         // Main panel for this widget
@@ -77,7 +81,7 @@ public class FestDatePicker extends Composite implements ClickHandler, ChangeHan
         pickerName = inName;
         myPicker.setTitle(inToolTip);
 
-        myPicker.addChangeHandler(new datePickerListener());
+        myPicker.addValueChangeHandler(new datePickerListener());
         defaultTime = " 00:00:00";
         
         Date myStartDate = null;
@@ -94,7 +98,7 @@ public class FestDatePicker extends Composite implements ClickHandler, ChangeHan
         }
         
         // set a default date
-        myPicker.setSelectedDate(myStartDate, false);
+        myPicker.setValue(myStartDate, false);
         
         // set highlighting for festival week
         Vector<Date> festDatesList = new Vector<Date>(Constants.MAX_DAYS+2);        
@@ -107,10 +111,25 @@ public class FestDatePicker extends Composite implements ClickHandler, ChangeHan
 
             festDatesList.add(tempDate);            
         }
-        myPicker.addVisibleDateStyles(festDatesList, "festival-cells");
+        myPicker.addStyleToDates("festival-cells", festDatesList);
         
         // set up listbox
         lbDate.setTitle(inToolTip);
+        lbDate.addChangeHandler(new ChangeHandler()
+        {
+            public void onChange(ChangeEvent event)
+            {
+                Widget sender = (Widget) event.getSource();
+                // if date is changed in list box, save result, reset datepicker default
+                if (sender == lbDate)
+                {
+                    System.out.println("date changed! ");
+                    selectedDayIndex = lbDate.getSelectedIndex();
+                    setDefaultDate(selectedDayIndex);
+                    fireDataChangeListeners();
+                }
+            }
+        });
         
         // convert 2007-01-20 to 01/20/2007
         String strTemp = Constants.FESTIVAL_START_DATE;
@@ -174,7 +193,7 @@ public class FestDatePicker extends Composite implements ClickHandler, ChangeHan
         }
         
         // set a default date
-        myPicker.setSelectedDate(myStartDate, false);
+        myPicker.setValue(myStartDate, false);
     }
     
     /**
@@ -208,33 +227,18 @@ public class FestDatePicker extends Composite implements ClickHandler, ChangeHan
         }
     }
     
-    /**
-     * Handles when date picker is clicked.
-     * @param Widget the incoming button clicked.
-     */
-    public void onChange(ChangeEvent event)
-    {
-        Widget sender = (Widget) event.getSource();
-        // if date is changed in list box, save result, reset datepicker default
-        if (sender == lbDate)
-        {
-            System.out.println("date changed! ");
-            selectedDayIndex = lbDate.getSelectedIndex();
-            setDefaultDate(selectedDayIndex);
-            fireDataChangeListeners();
-        }
-    }
+    
     
     /**
      * Listener class to handle when server activity occurs.
      */
-    class datePickerListener implements ChangeHandler<Date>
+    class datePickerListener implements ValueChangeHandler<Date>
     {
         /**
          * Handles when date picker is clicked.
          * @param ChangeEvent the event that occurred.
          */
-        public void onChange(ChangeEvent event)
+        public void onValueChange(ValueChangeEvent<Date> event)
         {
             // NOTE: must use deprecated methods until GWT supports Calendar.
             
